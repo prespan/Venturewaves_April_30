@@ -1,0 +1,82 @@
+[
+  {
+    "name": "UK Government",
+    "region": "United Kingdom",
+    "website": "https://www.gov.uk",
+    "focusAreas": ["Innovation Policy", "Net Zero"],
+    "description": "Driving innovation, sustainability, and economic growth.",
+    "logo": "/logos/uk-gov.png"
+  },
+  {
+    "name": "City of London",
+    "region": "UK",
+    "website": "https://www.london.gov.uk",
+    "focusAreas": ["Urban Tech", "Green Infrastructure"],
+    "description": "Making London a smart and sustainable global city.",
+    "logo": "/logos/london.png"
+  },
+  {
+    "name": "Tokyo Metropolitan Government",
+    "region": "Japan",
+    "website": "https://www.metro.tokyo.lg.jp",
+    "focusAreas": ["Smart City", "Resilience"],
+    "description": "Promoting innovation and future-focused city services.",
+    "logo": "/logos/tokyo.png"
+  },
+  {
+    "name": "City of Nice",
+    "region": "France",
+    "website": "https://www.nice.fr",
+    "focusAreas": ["Climate Adaptation", "Digital Economy"],
+    "description": "A Mediterranean leader in climate-smart urbanism.",
+    "logo": "/logos/nice.png"
+  },
+  {
+    "name": "Abu Dhabi Government",
+    "region": "UAE",
+    "website": "https://www.abudhabi.ae",
+    "focusAreas": ["Smart Cities", "Clean Energy"],
+    "description": "Investing in next-gen infrastructure and innovation.",
+    "logo": "/logos/abudhabi.png"
+  },
+  {
+    "name": "Principality of Monaco",
+    "region": "Monaco",
+    "website": "https://en.gouv.mc",
+    "focusAreas": ["Sustainability", "Maritime Tech"],
+    "description": "Pioneering eco-innovation and digital transformation.",
+    "logo": "/logos/monaco.png"
+  },
+  {
+    "name": "City of Amsterdam",
+    "region": "Netherlands",
+    "website": "https://www.amsterdam.nl",
+    "focusAreas": ["Circular Economy", "Urban Innovation"],
+    "description": "A global hub for open innovation and startups.",
+    "logo": "/logos/amsterdam.png"
+  },
+  {
+    "name": "San Francisco County",
+    "region": "USA",
+    "website": "https://sf.gov",
+    "focusAreas": ["Mobility", "Digital Inclusion"],
+    "description": "Championing inclusive and tech-driven policies.",
+    "logo": "/logos/sf.png"
+  },
+  {
+    "name": "Singapore Government",
+    "region": "Singapore",
+    "website": "https://www.gov.sg",
+    "focusAreas": ["Smart Nation", "Resilient Infrastructure"],
+    "description": "Global leader in smart and sustainable governance.",
+    "logo": "/logos/singapore.png"
+  },
+  {
+    "name": "City of Helsinki",
+    "region": "Finland",
+    "website": "https://www.hel.fi",
+    "focusAreas": ["AI in Governance", "Green Tech"],
+    "description": "At the forefront of digital public services.",
+    "logo": "/logos/helsinki.png"
+  }
+]
