@@ -13,8 +13,8 @@ model Studio {
   website        String
   address        String
   description    String
-  keyStartups    String
-  logo           String
+  keyStartups    Json
+  logo           String?
   createdAt      DateTime   @default(now())
   proposals      Proposal[]
 }
@@ -24,10 +24,10 @@ model Corporate {
   name             String
   website          String
   address          String
-  industryTags     String
+  industryTags     Json
   description      String
-  notableProducts  String
-  logo             String
+  notableProducts  Json
+  logo             String?
   createdAt        DateTime   @default(now())
   challenges       Challenge[]
 }
@@ -37,9 +37,9 @@ model Government {
   name         String
   address      String
   website      String
-  focusAreas   String
+  focusAreas   Json
   description  String
-  logo         String
+  logo         String?
   createdAt    DateTime   @default(now())
   challenges   Challenge[]
 }
@@ -49,9 +49,9 @@ model ResearchOrganization {
   name         String
   website      String
   address      String
-  focusDomains String
+  focusDomains Json
   description  String
-  logo         String
+  logo         String?
   createdAt    DateTime   @default(now())
   challenges   Challenge[]
 }
@@ -61,9 +61,9 @@ model Investor {
   name                String
   website             String
   address             String
-  focus               String
-  notableInvestments  String
-  logo                String
+  focus               Json
+  notableInvestments  Json
+  logo                String?
   createdAt           DateTime   @default(now())
 }
 
