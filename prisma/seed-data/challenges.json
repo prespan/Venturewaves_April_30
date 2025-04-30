@@ -1,0 +1,102 @@
+[
+  {
+    "title": "Sustainable Smart Packaging",
+    "description": "Design a biodegradable packaging system for e-commerce with embedded tracking.",
+    "postedBy": "Unilever",
+    "deadline": "2025-06-30T00:00:00.000Z",
+    "postedAt": "2025-04-15T00:00:00.000Z",
+    "phase1Budget": 20000,
+    "capitalCommitment": 1200000,
+    "equityOffered": 35
+  },
+  {
+    "title": "AI for Predictive Healthcare",
+    "description": "Build an AI platform for early-stage chronic disease prediction using public datasets.",
+    "postedBy": "GE Healthcare",
+    "deadline": "2025-07-15T00:00:00.000Z",
+    "postedAt": "2025-04-10T00:00:00.000Z",
+    "phase1Budget": 30000,
+    "capitalCommitment": 3200000,
+    "equityOffered": 40
+  },
+  {
+    "title": "Urban Mobility for All",
+    "description": "Develop a modular micro-mobility solution focused on disabled and elderly populations.",
+    "postedBy": "City of Helsinki",
+    "deadline": "2025-08-01T00:00:00.000Z",
+    "postedAt": "2025-04-18T00:00:00.000Z",
+    "phase1Budget": 15000,
+    "capitalCommitment": 1600000,
+    "equityOffered": 34
+  },
+  {
+    "title": "Closed-Loop Bottle Recycling",
+    "description": "Prototype a city-level collection and processing system for plastic beverage bottles.",
+    "postedBy": "Coca-Cola Company",
+    "deadline": "2025-07-01T00:00:00.000Z",
+    "postedAt": "2025-04-05T00:00:00.000Z",
+    "phase1Budget": 25000,
+    "capitalCommitment": 2500000,
+    "equityOffered": 38
+  },
+  {
+    "title": "Privacy-Preserving Edge AI",
+    "description": "Develop federated learning models for smart home devices ensuring no data leaves the edge.",
+    "postedBy": "Samsung Next",
+    "deadline": "2025-09-01T00:00:00.000Z",
+    "postedAt": "2025-04-12T00:00:00.000Z",
+    "phase1Budget": 40000,
+    "capitalCommitment": 5000000,
+    "equityOffered": 45
+  },
+  {
+    "title": "Zero Waste Smart Kitchen",
+    "description": "Design a connected kitchen system that minimizes food waste with real-time inventory tracking.",
+    "postedBy": "Nestlé",
+    "deadline": "2025-06-15T00:00:00.000Z",
+    "postedAt": "2025-04-07T00:00:00.000Z",
+    "phase1Budget": 22000,
+    "capitalCommitment": 1800000,
+    "equityOffered": 33
+  },
+  {
+    "title": "Resilient Urban Cooling",
+    "description": "Create climate-resilient cooling systems for urban infrastructure in heatwave-prone regions.",
+    "postedBy": "Singapore Government",
+    "deadline": "2025-08-10T00:00:00.000Z",
+    "postedAt": "2025-04-14T00:00:00.000Z",
+    "phase1Budget": 18000,
+    "capitalCommitment": 1400000,
+    "equityOffered": 30
+  },
+  {
+    "title": "Waterless Hygiene Solutions",
+    "description": "Innovate a compact, water-free hygiene product for disaster-relief and remote areas.",
+    "postedBy": "UK Government",
+    "deadline": "2025-07-20T00:00:00.000Z",
+    "postedAt": "2025-04-09T00:00:00.000Z",
+    "phase1Budget": 10000,
+    "capitalCommitment": 1250000,
+    "equityOffered": 36
+  },
+  {
+    "title": "Circular City Dashboard",
+    "description": "Develop a digital twin platform for cities to track and optimize circular economy KPIs.",
+    "postedBy": "City of Amsterdam",
+    "deadline": "2025-07-05T00:00:00.000Z",
+    "postedAt": "2025-04-03T00:00:00.000Z",
+    "phase1Budget": 35000,
+    "capitalCommitment": 4100000,
+    "equityOffered": 43
+  },
+  {
+    "title": "AI in Education Equity",
+    "description": "Design a tool that uses AI to identify and address disparities in K-12 education access.",
+    "postedBy": "Zinc VC",
+    "deadline": "2025-08-15T00:00:00.000Z",
+    "postedAt": "2025-04-06T00:00:00.000Z",
+    "phase1Budget": 20000,
+    "capitalCommitment": 1500000,
+    "equityOffered": 32
+  }
+]
