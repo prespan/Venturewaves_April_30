@@ -1,1 +1,122 @@
-// placeholder
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Studio {
+  id             Int      @id @default(autoincrement())
+  name           String
+  website        String
+  address        String
+  description    String
+  keyStartups    String
+  logo           String
+  createdAt      DateTime @default(now())
+  proposals      Proposal[]
+}
+
+model Corporate {
+  id             Int      @id @default(autoincrement())
+  name           String
+  website        String
+  address        String
+  industryTags   String
+  description    String
+  notableProducts String
+  logo           String
+  createdAt      DateTime @default(now())
+  challenges     Challenge[]
+}
+
+model Government {
+  id           Int      @id @default(autoincrement())
+  name         String
+  address      String
+  website      String
+  focusAreas   String
+  description  String
+  logo         String
+  createdAt    DateTime @default(now())
+  challenges   Challenge[]
+}
+
+model ResearchOrganization {
+  id           Int      @id @default(autoincrement())
+  name         String
+  website      String
+  address      String
+  focusDomains String
+  description  String
+  logo         String
+  createdAt    DateTime @default(now())
+  challenges   Challenge[]
+}
+
+model Investor {
+  id                Int      @id @default(autoincrement())
+  name              String
+  website           String
+  address           String
+  focus             String
+  notableInvestments String
+  logo              String
+  createdAt         DateTime @default(now())
+}
+
+model Challenge {
+  id                  Int      @id @default(autoincrement())
+  title               String
+  description         String
+  submittedBy         String
+  deadline            DateTime
+  postedAt            DateTime
+  phase1Budget        Int
+  capitalCommitment   Int
+  equityOffered       Int
+  hasProposals        Boolean  @default(false)
+  projectLinked       Boolean  @default(false)
+  proposals           Proposal[]
+}
+
+model Proposal {
+  id           Int      @id @default(autoincrement())
+  challengeId  Int
+  challenge    Challenge @relation(fields: [challengeId], references: [id])
+  title        String
+  description  String
+  actionPlan   String
+  submittedBy  String
+  submittedAt  DateTime  @default(now())
+  status       String    @default("PENDING")
+  partOfProject Boolean  @default(false)
+}
+
+model Project {
+  id            Int      @id @default(autoincrement())
+  challengeId   Int
+  proposalId    Int
+  collaborators String
+  investment    Int
+  milestones    String
+  createdAt     DateTime @default(now())
+}
+
+model Message {
+  id            Int      @id @default(autoincrement())
+  sender        String
+  recipient     String
+  content       String
+  createdAt     DateTime @default(now())
+}
+
+model LegalDoc {
+  id            Int      @id @default(autoincrement())
+  type          String
+  fileUrl       String
+  uploadedAt    DateTime @default(now())
+}
+
