@@ -1,10 +1,19 @@
 // prisma/seed.ts
 import { PrismaClient } from '@prisma/client'
+import {
+  studios,
+  corporates,
+  governments,
+  research,
+  investors,
+  challenges,
+  proposals
+} from './seed-data'
+
 const prisma = new PrismaClient()
 
-import { studios, corporates, governments, research, investors, challenges, proposals } from './seed-data'
-
 async function main() {
+  // Clean existing records
   await prisma.proposal.deleteMany()
   await prisma.challenge.deleteMany()
   await prisma.investor.deleteMany()
@@ -13,64 +22,70 @@ async function main() {
   await prisma.corporate.deleteMany()
   await prisma.studio.deleteMany()
 
+  // Studios
   await prisma.studio.createMany({
     data: studios.map(s => ({
       name: s.name,
       website: s.url,
       address: s.country,
       description: s.description,
-      keyStartups: JSON.stringify(s.keyStartups),
-      logo: s.logo || ''
+      keyStartups: s.keyStartups,
+      logo: s.logo || null
     }))
   })
 
+  // Corporates
   await prisma.corporate.createMany({
     data: corporates.map(c => ({
       name: c.name,
       website: c.url,
       address: c.country,
-      industryTags: JSON.stringify(c.industryTags),
+      industryTags: c.industryTags,
       description: c.description,
-      notableProducts: c.challenges.join(', '),
-      logo: c.logo || ''
+      notableProducts: c.challenges,
+      logo: c.logo || null
     }))
   })
 
+  // Governments
   await prisma.government.createMany({
     data: governments.map(g => ({
       name: g.name,
       address: g.region,
       website: g.website,
-      focusAreas: JSON.stringify(g.focusAreas),
+      focusAreas: g.focusAreas,
       description: g.description,
-      logo: g.logo || ''
+      logo: g.logo || null
     }))
   })
 
+  // Research Organizations
   await prisma.researchOrganization.createMany({
     data: research.map(r => ({
       name: r.name,
       website: r.website,
       address: r.country,
-      focusDomains: JSON.stringify(r.domains),
+      focusDomains: r.domains,
       description: r.description,
-      logo: r.logo || ''
+      logo: r.logo || null
     }))
   })
 
+  // Investors
   await prisma.investor.createMany({
     data: investors.map(i => ({
       name: i.name,
       website: i.website,
       address: i.hq,
-      focus: JSON.stringify(i.focus),
-      notableInvestments: JSON.stringify(i.notableInvestments),
-      logo: i.logo || ''
+      focus: i.focus,
+      notableInvestments: i.notableInvestments,
+      logo: i.logo || null
     }))
   })
 
+  // Challenges
   await prisma.challenge.createMany({
-    data: challenges.map((c, index) => ({
+    data: challenges.map(c => ({
       title: c.title,
       description: c.description,
       submittedBy: c.postedBy,
@@ -82,12 +97,13 @@ async function main() {
     }))
   })
 
+  // Proposals
   await prisma.proposal.createMany({
     data: proposals.map(p => ({
       challengeId: p.challengeId,
       title: p.title,
       description: p.description,
-      actionPlan: JSON.stringify(p.actionPlan),
+      actionPlan: p.actionPlan,
       submittedBy: p.submittedBy,
       submittedAt: new Date(p.submittedAt),
       status: p.status
@@ -103,4 +119,3 @@ main()
     process.exit(1)
   })
   .finally(() => prisma.$disconnect())
-
