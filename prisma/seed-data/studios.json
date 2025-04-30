@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Antler",
+    "url": "https://antler.co",
+    "country": "Singapore",
+    "description": "Global early-stage VC and startup generator.",
+    "keyStartups": ["Airalo", "Reebelo"],
+    "logo": "/logos/antler.png"
+  },
+  {
+    "name": "Founders Factory",
+    "url": "https://foundersfactory.com",
+    "country": "UK",
+    "description": "Startup studio and accelerator partnered with corporates.",
+    "keyStartups": ["Zebra Health", "Vidsy"],
+    "logo": "/logos/foundersfactory.png"
+  },
+  {
+    "name": "Mach49",
+    "url": "https://mach49.com",
+    "country": "USA",
+    "description": "Builds new ventures inside large corporations.",
+    "keyStartups": ["BlueYard"],
+    "logo": "/logos/mach49.png"
+  },
+  {
+    "name": "eFounders",
+    "url": "https://efounders.com",
+    "country": "France",
+    "description": "Studio focused on SaaS startups.",
+    "keyStartups": ["Front", "Aircall"],
+    "logo": "/logos/efounders.png"
+  },
+  {
+    "name": "Rocket Internet",
+    "url": "https://rocket-internet.com",
+    "country": "Germany",
+    "description": "Backs and builds proven internet business models.",
+    "keyStartups": ["Zalando", "Lazada"],
+    "logo": "/logos/rocket.png"
+  },
+  {
+    "name": "Betaworks",
+    "url": "https://betaworks.com",
+    "country": "USA",
+    "description": "Product-focused studio for consumer apps.",
+    "keyStartups": ["Giphy", "Dots"],
+    "logo": "/logos/betaworks.png"
+  },
+  {
+    "name": "High Alpha",
+    "url": "https://highalpha.com",
+    "country": "USA",
+    "description": "B2B SaaS venture studio and fund.",
+    "keyStartups": ["Mandolin", "Zylo"],
+    "logo": "/logos/highalpha.png"
+  },
+  {
+    "name": "Idealab",
+    "url": "https://idealab.com",
+    "country": "USA",
+    "description": "Pioneer in the venture studio model.",
+    "keyStartups": ["X1", "eSolar"],
+    "logo": "/logos/idealab.png"
+  },
+  {
+    "name": "Zinc VC",
+    "url": "https://zinc.vc",
+    "country": "UK",
+    "description": "Mission-driven startup studio for societal issues.",
+    "keyStartups": ["Curve", "Pivigo"],
+    "logo": "/logos/zinc.png"
+  },
+  {
+    "name": "BCG Digital Ventures",
+    "url": "https://bcgdv.com",
+    "country": "Global",
+    "description": "Corporate innovation and venture builder by BCG.",
+    "keyStartups": ["Heycar", "Movo"],
+    "logo": "/logos/bcg.png"
+  }
+]
