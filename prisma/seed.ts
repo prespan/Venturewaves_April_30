@@ -1,35 +1,106 @@
+// prisma/seed.ts
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
+import { studios, corporates, governments, research, investors, challenges, proposals } from './seed-data'
+
 async function main() {
-  // Seed studios
+  await prisma.proposal.deleteMany()
+  await prisma.challenge.deleteMany()
+  await prisma.investor.deleteMany()
+  await prisma.researchOrganization.deleteMany()
+  await prisma.government.deleteMany()
+  await prisma.corporate.deleteMany()
+  await prisma.studio.deleteMany()
+
   await prisma.studio.createMany({
-    data: [
-      { name: "Antler", website: "https://antler.co", address: "Singapore", description: "Global early-stage VC and startup generator.", keyStartups: "Airalo, Reebelo", logo: "/logos/antler.png" },
-      { name: "Founders Factory", website: "https://foundersfactory.com", address: "UK", description: "Startup studio partnered with corporates.", keyStartups: "Zebra Health, Vidsy", logo: "/logos/foundersfactory.png" },
-      // ... (you can continue adding your full studio preload data here)
-    ]
+    data: studios.map(s => ({
+      name: s.name,
+      website: s.url,
+      address: s.country,
+      description: s.description,
+      keyStartups: JSON.stringify(s.keyStartups),
+      logo: s.logo || ''
+    }))
   })
 
-  // Seed corporates
   await prisma.corporate.createMany({
-    data: [
-      { name: "Siemens", website: "https://www.siemens.com", address: "Germany", industryTags: "Mobility, Energy", description: "Global leader in electrification, automation, digitalization.", notableProducts: "Smart Grid, Mobility Platform", logo: "/logos/siemens.png" },
-      // Add more corporates...
-    ]
+    data: corporates.map(c => ({
+      name: c.name,
+      website: c.url,
+      address: c.country,
+      industryTags: JSON.stringify(c.industryTags),
+      description: c.description,
+      notableProducts: c.challenges.join(', '),
+      logo: c.logo || ''
+    }))
   })
 
-  // (Add governments, research organizations, investors similarly...)
+  await prisma.government.createMany({
+    data: governments.map(g => ({
+      name: g.name,
+      address: g.region,
+      website: g.website,
+      focusAreas: JSON.stringify(g.focusAreas),
+      description: g.description,
+      logo: g.logo || ''
+    }))
+  })
 
-  console.log('Database seeded!')
+  await prisma.researchOrganization.createMany({
+    data: research.map(r => ({
+      name: r.name,
+      website: r.website,
+      address: r.country,
+      focusDomains: JSON.stringify(r.domains),
+      description: r.description,
+      logo: r.logo || ''
+    }))
+  })
+
+  await prisma.investor.createMany({
+    data: investors.map(i => ({
+      name: i.name,
+      website: i.website,
+      address: i.hq,
+      focus: JSON.stringify(i.focus),
+      notableInvestments: JSON.stringify(i.notableInvestments),
+      logo: i.logo || ''
+    }))
+  })
+
+  await prisma.challenge.createMany({
+    data: challenges.map((c, index) => ({
+      title: c.title,
+      description: c.description,
+      submittedBy: c.postedBy,
+      deadline: new Date(c.deadline),
+      postedAt: new Date(c.postedAt),
+      phase1Budget: c.phase1Budget,
+      capitalCommitment: c.capitalCommitment,
+      equityOffered: c.equityOffered
+    }))
+  })
+
+  await prisma.proposal.createMany({
+    data: proposals.map(p => ({
+      challengeId: p.challengeId,
+      title: p.title,
+      description: p.description,
+      actionPlan: JSON.stringify(p.actionPlan),
+      submittedBy: p.submittedBy,
+      submittedAt: new Date(p.submittedAt),
+      status: p.status
+    }))
+  })
+
+  console.log('✅ Database successfully seeded with preloaded data.')
 }
 
 main()
-  .catch((e) => {
-    console.error(e)
+  .catch(e => {
+    console.error('❌ Seeding error:', e)
     process.exit(1)
   })
-  .finally(() => {
-    prisma.$disconnect()
-  })
+  .finally(() => prisma.$disconnect())
 
