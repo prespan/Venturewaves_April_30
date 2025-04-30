@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Sequoia Capital",
+    "website": "https://www.sequoiacap.com",
+    "hq": "USA",
+    "focus": ["Tech", "Healthcare"],
+    "notableInvestments": ["Apple", "Google", "WhatsApp"],
+    "logo": "/logos/sequoia.png"
+  },
+  {
+    "name": "Accel",
+    "website": "https://www.accel.com",
+    "hq": "USA",
+    "focus": ["Consumer", "Enterprise"],
+    "notableInvestments": ["Facebook", "Dropbox", "Slack"],
+    "logo": "/logos/accel.png"
+  },
+  {
+    "name": "Andreessen Horowitz",
+    "website": "https://a16z.com",
+    "hq": "USA",
+    "focus": ["Web3", "BioTech"],
+    "notableInvestments": ["Airbnb", "Coinbase", "Stripe"],
+    "logo": "/logos/a16z.png"
+  },
+  {
+    "name": "Index Ventures",
+    "website": "https://www.indexventures.com",
+    "hq": "UK/Switzerland",
+    "focus": ["SaaS", "Consumer"],
+    "notableInvestments": ["Dropbox", "Skype", "Deliveroo"],
+    "logo": "/logos/indexventures.png"
+  },
+  {
+    "name": "Bessemer Venture Partners",
+    "website": "https://www.bvp.com",
+    "hq": "USA",
+    "focus": ["Cloud", "Healthcare"],
+    "notableInvestments": ["LinkedIn", "Twilio", "Shopify"],
+    "logo": "/logos/bessemer.png"
+  },
+  {
+    "name": "Balderton Capital",
+    "website": "https://www.balderton.com",
+    "hq": "UK",
+    "focus": ["Europe Startups"],
+    "notableInvestments": ["Revolut", "Citymapper"],
+    "logo": "/logos/balderton.png"
+  },
+  {
+    "name": "Union Square Ventures",
+    "website": "https://www.usv.com",
+    "hq": "USA",
+    "focus": ["Crypto", "Networks"],
+    "notableInvestments": ["Twitter", "Duolingo", "Tumblr"],
+    "logo": "/logos/usv.png"
+  },
+  {
+    "name": "SoftBank Vision Fund",
+    "website": "https://visionfund.com",
+    "hq": "Japan",
+    "focus": ["AI", "Tech Infrastructure"],
+    "notableInvestments": ["Uber", "WeWork", "ARM"],
+    "logo": "/logos/softbank.png"
+  },
+  {
+    "name": "Northzone",
+    "website": "https://northzone.com",
+    "hq": "Europe",
+    "focus": ["Early-stage"],
+    "notableInvestments": ["Spotify", "Klarna"],
+    "logo": "/logos/northzone.png"
+  },
+  {
+    "name": "Lightspeed Venture Partners",
+    "website": "https://lsvp.com",
+    "hq": "USA",
+    "focus": ["Enterprise", "Fintech"],
+    "notableInvestments": ["Snapchat", "Nutanix", "GrubHub"],
+    "logo": "/logos/lightspeed.png"
+  }
+]
