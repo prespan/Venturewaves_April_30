@@ -1,36 +1,37 @@
-import prisma from '@/lib/prisma'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
+import prisma from '@/lib/prisma'
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const session = await getSession({ req })
-  if (!session) return res.status(401).json({ error: 'Unauthorized' })
+  if (!session) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
 
-  const userEmail = session.user.email
-
-  const threads = await prisma.thread.findMany({
-    where: {
-      participants: {
-        some: {
-          email: userEmail
+  if (req.method === 'GET') {
+    try {
+      const threads = await prisma.thread.findMany({
+        where: {
+          participants: {
+            has: session.user.email
+          }
+        },
+        include: {
+          messages: true
+        },
+        orderBy: {
+          updatedAt: 'desc'
         }
-      }
-    },
-    include: {
-      messages: {
-        orderBy: { sentAt: 'asc' },
-        take: 10
-      }
-    },
-    orderBy: { updatedAt: 'desc' }
-  })
-
-  const formatted = threads.map(thread => ({
-    id: thread.id,
-    title: thread.title,
-    participants: thread.participants.map(p => p.name || p.email),
-    lastMessageSnippet: thread.messages[thread.messages.length - 1]?.body?.slice(0, 50) || '',
-    messages: thread.messages
-  }))
-
-  res.json(formatted)
+      })
+      return res.status(200).json(threads)
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+  } else {
+    return res.status(405).json({ error: 'Method Not Allowed' })
+  }
 }
