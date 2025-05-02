@@ -68,7 +68,7 @@ model Investor {
 }
 
 model Challenge {
-  id                Int        @id @default(autoincrement())
+  id                Int                   @id @default(autoincrement())
   title             String
   description       String
   submittedBy       String
@@ -77,24 +77,20 @@ model Challenge {
   phase1Budget      Int
   capitalCommitment Int
   equityOffered     Int
-  hasProposals      Boolean    @default(false)
-  projectLinked     Boolean    @default(false)
+  hasProposals      Boolean               @default(false)
+  projectLinked     Boolean               @default(false)
+  corporateId       Int?
+  governmentId      Int?
+  researchOrgId     Int?
+  corporate         Corporate?            @relation(fields: [corporateId], references: [id])
+  government        Government?           @relation(fields: [governmentId], references: [id])
+  researchOrg       ResearchOrganization? @relation(fields: [researchOrgId], references: [id])
   proposals         Proposal[]
-
-  corporate   Corporate? @relation(fields: [corporateId], references: [id])
-  corporateId Int?
-
-  government   Government? @relation(fields: [governmentId], references: [id])
-  governmentId Int?
-
-  researchOrg   ResearchOrganization? @relation(fields: [researchOrgId], references: [id])
-  researchOrgId Int?
 }
 
 model Proposal {
   id            Int       @id @default(autoincrement())
   challengeId   Int
-  challenge     Challenge @relation(fields: [challengeId], references: [id])
   title         String
   description   String
   actionPlan    Json
@@ -102,8 +98,9 @@ model Proposal {
   submittedAt   DateTime  @default(now())
   status        String    @default("PENDING")
   partOfProject Boolean   @default(false)
-  Studio        Studio?   @relation(fields: [studioId], references: [id])
   studioId      Int?
+  challenge     Challenge @relation(fields: [challengeId], references: [id])
+  Studio        Studio?   @relation(fields: [studioId], references: [id])
 }
 
 model Project {
