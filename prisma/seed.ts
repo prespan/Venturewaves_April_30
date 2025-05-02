@@ -1,91 +1,81 @@
-// prisma/seed.ts
-import { PrismaClient } from '@prisma/client'
-import {
-  studios,
-  corporates,
-  governments,
-  research,
-  investors,
-  challenges,
-  proposals
-} from './seed-data'
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
-const prisma = new PrismaClient()
+import { studios } from './seed-data/studios.json';
+import { corporates } from './seed-data/corporates.json';
+import { governments } from './seed-data/governments.json';
+import { research } from './seed-data/research.json';
+import { investors } from './seed-data/investors.json';
+import { challenges } from './seed-data/challenges.json';
+import { proposals } from './seed-data/proposals.json';
 
 async function main() {
-  // Clean existing records
-  await prisma.proposal.deleteMany()
-  await prisma.challenge.deleteMany()
-  await prisma.investor.deleteMany()
-  await prisma.researchOrganization.deleteMany()
-  await prisma.government.deleteMany()
-  await prisma.corporate.deleteMany()
-  await prisma.studio.deleteMany()
+  await prisma.proposal.deleteMany();
+  await prisma.challenge.deleteMany();
+  await prisma.investor.deleteMany();
+  await prisma.researchOrganization.deleteMany();
+  await prisma.government.deleteMany();
+  await prisma.corporate.deleteMany();
+  await prisma.studio.deleteMany();
 
-  // Studios
   await prisma.studio.createMany({
-    data: studios.map(s => ({
+    data: studios.map((s: any) => ({
       name: s.name,
       website: s.url,
       address: s.country,
       description: s.description,
       keyStartups: s.keyStartups,
-      logo: s.logo || null
+      logo: s.logo || ''
     }))
-  })
+  });
 
-  // Corporates
   await prisma.corporate.createMany({
-    data: corporates.map(c => ({
+    data: corporates.map((c: any) => ({
       name: c.name,
       website: c.url,
       address: c.country,
       industryTags: c.industryTags,
       description: c.description,
       notableProducts: c.challenges,
-      logo: c.logo || null
+      logo: c.logo || ''
     }))
-  })
+  });
 
-  // Governments
   await prisma.government.createMany({
-    data: governments.map(g => ({
+    data: governments.map((g: any) => ({
       name: g.name,
       address: g.region,
       website: g.website,
       focusAreas: g.focusAreas,
       description: g.description,
-      logo: g.logo || null
+      logo: g.logo || ''
     }))
-  })
+  });
 
-  // Research Organizations
   await prisma.researchOrganization.createMany({
-    data: research.map(r => ({
+    data: research.map((r: any) => ({
       name: r.name,
       website: r.website,
       address: r.country,
       focusDomains: r.domains,
       description: r.description,
-      logo: r.logo || null
+      logo: r.logo || ''
     }))
-  })
+  });
 
-  // Investors
   await prisma.investor.createMany({
-    data: investors.map(i => ({
+    data: investors.map((i: any) => ({
       name: i.name,
       website: i.website,
       address: i.hq,
       focus: i.focus,
       notableInvestments: i.notableInvestments,
-      logo: i.logo || null
+      logo: i.logo || ''
     }))
-  })
+  });
 
-  // Challenges
   await prisma.challenge.createMany({
-    data: challenges.map(c => ({
+    data: challenges.map((c: any) => ({
       title: c.title,
       description: c.description,
       submittedBy: c.postedBy,
@@ -95,11 +85,10 @@ async function main() {
       capitalCommitment: c.capitalCommitment,
       equityOffered: c.equityOffered
     }))
-  })
+  });
 
-  // Proposals
   await prisma.proposal.createMany({
-    data: proposals.map(p => ({
+    data: proposals.map((p: any) => ({
       challengeId: p.challengeId,
       title: p.title,
       description: p.description,
@@ -108,14 +97,14 @@ async function main() {
       submittedAt: new Date(p.submittedAt),
       status: p.status
     }))
-  })
+  });
 
-  console.log('✅ Database successfully seeded with preloaded data.')
+  console.log('✅ Database successfully seeded with preloaded data.');
 }
 
 main()
-  .catch(e => {
-    console.error('❌ Seeding error:', e)
-    process.exit(1)
+  .catch((e) => {
+    console.error('❌ Seeding error:', e);
+    process.exit(1);
   })
-  .finally(() => prisma.$disconnect())
+  .finally(() => prisma.$disconnect());
