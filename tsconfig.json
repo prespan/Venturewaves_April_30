@@ -16,8 +16,8 @@
     "incremental": true,
     "types": ["node"],
     "moduleDetection": "force",
-    "baseUrl": ".",                      // ✅ Add this
-    "paths": {                           // ✅ Add this
+    "baseUrl": ".",                      
+    "paths": {                           
       "@/*": ["./*"]
     }
   },
