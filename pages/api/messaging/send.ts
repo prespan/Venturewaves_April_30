@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
 import { getSession } from 'next-auth/react'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req })
@@ -8,25 +8,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method !== 'POST') return res.status(405).end()
 
-  const { recipient, message } = req.body
+  const { threadId, message } = req.body
 
-  if (!recipient || !message?.trim()) {
+  if (!threadId || typeof message !== 'string' || !message.trim()) {
     return res.status(400).json({ error: 'Invalid payload' })
   }
 
-  try {
-    const newMessage = await prisma.message.create({
-      data: {
-        sender: session.user.email,
-        recipient: recipient,
-        content: message,
-        createdAt: new Date()
-      }
-    })
-
-    return res.status(201).json(newMessage)
-  } catch (error) {
-    console.error('Error creating message:', error)
-    return res.status(500).json({ error: 'Something went wrong' })
+  const senderEmail = session.user?.email
+  if (typeof senderEmail !== 'string') {
+    return res.status(400).json({ error: 'Invalid sender email' })
   }
+
+  const newMessage = await prisma.message.create({
+    data: {
+      body: message,
+      sentAt: new Date(),
+      senderEmail: senderEmail,
+      thread: { connect: { id: threadId } }
+    }
+  })
+
+  await prisma.thread.update({
+    where: { id: threadId },
+    data: { updatedAt: new Date() }
+  })
+
+  res.status(201).json(newMessage)
 }
