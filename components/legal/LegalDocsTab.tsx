@@ -1,90 +1,71 @@
 import { useState } from 'react'
-import useSWR from 'swr'
-import { Upload, FileText, Download } from 'lucide-react'
 
-const fetcher = (url: string) => fetch(url).then(res => res.json())
+export default function SendMessageForm() {
+  const [recipient, setRecipient] = useState('')
+  const [message, setMessage] = useState('')
+  const [sending, setSending] = useState(false)
+  const [status, setStatus] = useState<string | null>(null)
 
-// ✅ Define the LegalDoc type to help TypeScript understand doc structure
-interface LegalDoc {
-  id: number
-  name: string
-  url: string
-}
+  const handleSend = async () => {
+    if (!recipient || !message.trim()) {
+      setStatus('Please fill in both fields.')
+      return
+    }
 
-export default function LegalDocsTab({ challengeId }: { challengeId: string }) {
-  const { data: docs = [], mutate } = useSWR<LegalDoc[]>(
-    `/api/challenges/${challengeId}/legal-docs`,
-    fetcher
-  )
+    setSending(true)
+    try {
+      const res = await fetch('/api/messaging/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ recipient, message })
+      })
 
-  const [file, setFile] = useState<File | null>(null)
-  const [uploading, setUploading] = useState(false)
-
-  const handleUpload = async () => {
-    if (!file) return
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    await fetch(`/api/challenges/${challengeId}/legal-docs/upload`, {
-      method: 'POST',
-      body: formData
-    })
-
-    setFile(null)
-    await mutate()
-    setUploading(false)
+      const data = await res.json()
+      if (res.ok) {
+        setStatus('Message sent successfully!')
+        setMessage('')
+        setRecipient('')
+      } else {
+        setStatus(data.error || 'Failed to send message.')
+      }
+    } catch (err) {
+      setStatus('An unexpected error occurred.')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-gray-800">📄 Legal Documents</h3>
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-gray-800">Send a Message</h3>
 
-      <div className="space-y-3">
-        {docs.map(doc => (
-          <div
-            key={doc.id}
-            className="flex items-center justify-between bg-gray-50 p-3 rounded-xl"
-          >
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <FileText className="w-4 h-4 text-orange-600" />
-              {doc.name}
-            </div>
-            <a
-              href={doc.url}
-              className="text-sm text-orange-600 flex items-center gap-1 hover:underline"
-              download
-            >
-              <Download className="w-4 h-4" /> Download
-            </a>
-          </div>
-        ))}
-        {docs.length === 0 && (
-          <p className="text-sm text-gray-500">
-            No legal documents uploaded yet.
-          </p>
-        )}
-      </div>
+      <input
+        type="email"
+        placeholder="Recipient email"
+        value={recipient}
+        onChange={(e) => setRecipient(e.target.value)}
+        className="block w-full p-2 border border-gray-300 rounded"
+      />
 
-      <div className="border-t pt-4">
-        <label className="text-sm font-medium text-gray-700 block mb-2">
-          Attach Legal Document (PDF, max 5MB)
-        </label>
-        <input
-          type="file"
-          accept="application/pdf"
-          onChange={e => setFile(e.target.files?.[0] || null)}
-          className="block mb-3"
-        />
-        <button
-          onClick={handleUpload}
-          disabled={!file || uploading}
-          className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-1"
-        >
-          <Upload className="w-4 h-4" /> {uploading ? 'Uploading...' : 'Upload'}
-        </button>
-      </div>
+      <textarea
+        placeholder="Your message..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        rows={4}
+        className="block w-full p-2 border border-gray-300 rounded"
+      />
+
+      <button
+        onClick={handleSend}
+        disabled={sending}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        {sending ? 'Sending...' : 'Send Message'}
+      </button>
+
+      {status && <p className="text-sm text-gray-600">{status}</p>}
     </div>
   )
 }
