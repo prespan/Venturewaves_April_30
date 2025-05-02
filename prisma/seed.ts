@@ -1,15 +1,19 @@
+// prisma/seed.ts
+
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import { studios } from './seed-data/studios.json';
-import { corporates } from './seed-data/corporates.json';
-import { governments } from './seed-data/governments.json';
-import { research } from './seed-data/research.json';
-import { investors } from './seed-data/investors.json';
-import { challenges } from './seed-data/challenges.json';
-import { proposals } from './seed-data/proposals.json';
+// ✅ Correct imports for JSON files (default export)
+import studiosData from './seed-data/studios.json';
+import corporatesData from './seed-data/corporates.json';
+import governmentsData from './seed-data/governments.json';
+import researchData from './seed-data/research.json';
+import investorsData from './seed-data/investors.json';
+import challengesData from './seed-data/challenges.json';
+import proposalsData from './seed-data/proposals.json';
 
 async function main() {
+  // Clean slate
   await prisma.proposal.deleteMany();
   await prisma.challenge.deleteMany();
   await prisma.investor.deleteMany();
@@ -18,64 +22,70 @@ async function main() {
   await prisma.corporate.deleteMany();
   await prisma.studio.deleteMany();
 
+  // Seed studios
   await prisma.studio.createMany({
-    data: studios.map((s: any) => ({
+    data: studiosData.map((s) => ({
       name: s.name,
       website: s.url,
       address: s.country,
       description: s.description,
       keyStartups: s.keyStartups,
-      logo: s.logo || ''
-    }))
+      logo: s.logo || null,
+    })),
   });
 
+  // Seed corporates
   await prisma.corporate.createMany({
-    data: corporates.map((c: any) => ({
+    data: corporatesData.map((c) => ({
       name: c.name,
       website: c.url,
       address: c.country,
       industryTags: c.industryTags,
       description: c.description,
       notableProducts: c.challenges,
-      logo: c.logo || ''
-    }))
+      logo: c.logo || null,
+    })),
   });
 
+  // Seed governments
   await prisma.government.createMany({
-    data: governments.map((g: any) => ({
+    data: governmentsData.map((g) => ({
       name: g.name,
       address: g.region,
       website: g.website,
       focusAreas: g.focusAreas,
       description: g.description,
-      logo: g.logo || ''
-    }))
+      logo: g.logo || null,
+    })),
   });
 
+  // Seed research organizations
   await prisma.researchOrganization.createMany({
-    data: research.map((r: any) => ({
+    data: researchData.map((r) => ({
       name: r.name,
       website: r.website,
       address: r.country,
       focusDomains: r.domains,
       description: r.description,
-      logo: r.logo || ''
-    }))
+      logo: r.logo || null,
+    })),
   });
 
+  // Seed investors
   await prisma.investor.createMany({
-    data: investors.map((i: any) => ({
+    data: investorsData.map((i) => ({
       name: i.name,
       website: i.website,
       address: i.hq,
       focus: i.focus,
       notableInvestments: i.notableInvestments,
-      logo: i.logo || ''
-    }))
+      logo: i.logo || null,
+    })),
   });
 
+  // Seed challenges
   await prisma.challenge.createMany({
-    data: challenges.map((c: any) => ({
+    data: challengesData.map((c) => ({
       title: c.title,
       description: c.description,
       submittedBy: c.postedBy,
@@ -83,28 +93,29 @@ async function main() {
       postedAt: new Date(c.postedAt),
       phase1Budget: c.phase1Budget,
       capitalCommitment: c.capitalCommitment,
-      equityOffered: c.equityOffered
-    }))
+      equityOffered: c.equityOffered,
+    })),
   });
 
+  // Seed proposals
   await prisma.proposal.createMany({
-    data: proposals.map((p: any) => ({
+    data: proposalsData.map((p) => ({
       challengeId: p.challengeId,
       title: p.title,
       description: p.description,
       actionPlan: p.actionPlan,
       submittedBy: p.submittedBy,
       submittedAt: new Date(p.submittedAt),
-      status: p.status
-    }))
+      status: p.status,
+    })),
   });
 
-  console.log('✅ Database successfully seeded with preloaded data.');
+  console.log('✅ Seed complete!');
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seeding error:', e);
+    console.error('❌ Seed failed:', e);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());
