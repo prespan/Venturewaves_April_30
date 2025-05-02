@@ -15,7 +15,11 @@
     "jsx": "preserve",
     "incremental": true,
     "types": ["node"],
-    "moduleDetection": "force"         // 👈 Ensures modules like seed.ts are properly treated as ESM
+    "moduleDetection": "force",
+    "baseUrl": ".",                      // ✅ Add this
+    "paths": {                           // ✅ Add this
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "next-env.d.ts",
