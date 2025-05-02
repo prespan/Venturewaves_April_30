@@ -4,8 +4,19 @@ import { Upload, FileText, Download } from 'lucide-react'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
+// ✅ Define the LegalDoc type to help TypeScript understand doc structure
+interface LegalDoc {
+  id: number
+  name: string
+  url: string
+}
+
 export default function LegalDocsTab({ challengeId }: { challengeId: string }) {
-  const { data: docs, mutate } = useSWR(`/api/challenges/${challengeId}/legal-docs`, fetcher)
+  const { data: docs = [], mutate } = useSWR<LegalDoc[]>(
+    `/api/challenges/${challengeId}/legal-docs`,
+    fetcher
+  )
+
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
 
@@ -31,8 +42,11 @@ export default function LegalDocsTab({ challengeId }: { challengeId: string }) {
       <h3 className="text-lg font-semibold text-gray-800">📄 Legal Documents</h3>
 
       <div className="space-y-3">
-        {docs?.map(doc => (
-          <div key={doc.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
+        {docs.map(doc => (
+          <div
+            key={doc.id}
+            className="flex items-center justify-between bg-gray-50 p-3 rounded-xl"
+          >
             <div className="flex items-center gap-2 text-sm text-gray-700">
               <FileText className="w-4 h-4 text-orange-600" />
               {doc.name}
@@ -46,11 +60,17 @@ export default function LegalDocsTab({ challengeId }: { challengeId: string }) {
             </a>
           </div>
         ))}
-        {docs?.length === 0 && <p className="text-sm text-gray-500">No legal documents uploaded yet.</p>}
+        {docs.length === 0 && (
+          <p className="text-sm text-gray-500">
+            No legal documents uploaded yet.
+          </p>
+        )}
       </div>
 
       <div className="border-t pt-4">
-        <label className="text-sm font-medium text-gray-700 block mb-2">Attach Legal Document (PDF, max 5MB)</label>
+        <label className="text-sm font-medium text-gray-700 block mb-2">
+          Attach Legal Document (PDF, max 5MB)
+        </label>
         <input
           type="file"
           accept="application/pdf"
