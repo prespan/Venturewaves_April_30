@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const logos = [
   'catapult.png',
@@ -13,17 +13,17 @@ const logos = [
   'byld.png',
   'coplex.png',
   'boomerang.png',
-]
+];
 
 export default function Home() {
-  const router = useRouter()
-  const [role, setRole] = useState('')
+  const router = useRouter();
+  const [role, setRole] = useState('');
 
   const handleStart = () => {
     if (role) {
-      router.push(`/register/${role}`)
+      router.push(`/register/${role}`);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 px-6 py-16">
@@ -46,16 +46,15 @@ export default function Home() {
         </p>
       </header>
 
-      <main className="mt-12 max-w-xl mx-auto w-full">
         <div className="space-y-4">
-          <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="role" className="text-sm font-medium text-gray-700 dark:text-gray-200">
             Select Organization Type
           </label>
           <select
             id="role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full rounded border border-gray-300 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full max-w-xs mx-auto border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-4 py-2 rounded shadow-sm"
           >
             <option value="">Choose a role...</option>
             <option value="studio">Studio</option>
@@ -68,30 +67,23 @@ export default function Home() {
           <button
             onClick={handleStart}
             disabled={!role}
-            className="w-full rounded bg-blue-600 text-white px-4 py-2 font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition disabled:opacity-50"
           >
             Get Started →
           </button>
         </div>
-      </main>
 
-      <section className="mt-16 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 items-center justify-center">
-        {logos.map((logo, index) => (
-          <img
-            key={index}
-            src={`/logos/${logo}`}
-            alt={logo.split('.')[0]}
-            className="h-12 w-auto mx-auto object-contain grayscale hover:grayscale-0 transition"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none'
-            }}
-          />
-        ))}
-      </section>
-
-      <footer className="text-center text-sm text-gray-400 mt-12">
-        © {new Date().getFullYear()} VentureWaves. All rights reserved.
-      </footer>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 items-center pt-12">
+          {logos.map((logo, index) => (
+            <img
+              key={index}
+              src={`/logos/${logo}`}
+              alt="Logo"
+              className="h-12 w-auto object-contain grayscale hover:grayscale-0 transition"
+            />
+          ))}
+        </div>
+      </div>
     </div>
-  )
+  );
 }
