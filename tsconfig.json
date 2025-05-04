@@ -16,8 +16,8 @@
     "incremental": true,
     "types": ["node"],
     "moduleDetection": "force",
-    "baseUrl": ".",                      
-    "paths": {                           
+    "baseUrl": ".",
+    "paths": {
       "@/*": ["./*"]
     }
   },
@@ -29,3 +29,4 @@
   ],
   "exclude": ["node_modules"]
 }
+
