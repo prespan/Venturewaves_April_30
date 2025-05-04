@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
-<<<<<<< HEAD
 @tailwind utilities;
-=======
-@tailwind utilities;
->>>>>>> 95d31a6 (Save progress before pulling from remote)
+
+body {
+  @apply bg-white text-gray-900 antialiased;
+}
