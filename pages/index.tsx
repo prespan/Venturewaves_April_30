@@ -54,7 +54,7 @@ export default function Home() {
         <button
           onClick={handleStart}
           disabled={!role}
-          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-6 py-2 rounded font-medium transition shadow"
+          className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-6 py-2 rounded font-medium transition shadow"
         >
           Get Started →
         </button>
