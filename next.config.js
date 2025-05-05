@@ -4,8 +4,7 @@ const nextConfig = {
   output: 'standalone',
   images: {
     domains: ['storage.googleapis.com', 'up.railway.app'],
-  },
+  }
 };
 
 module.exports = nextConfig;
-;
