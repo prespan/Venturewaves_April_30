@@ -1,19 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
   output: 'standalone',
-  images: {
-    domains: ['storage.googleapis.com', 'up.railway.app'],
+  experimental: {
+    // This is crucial for Railway deployment
+    outputFileTracingRoot: undefined,
   },
-  // Add this server configuration to fix the 502 error
-  serverRuntimeConfig: {
-    hostname: '0.0.0.0',
+  // This ensures the server listens on all interfaces
+  server: {
+    // Listen on all interfaces
+    host: '0.0.0.0',
+    // Use the PORT from environment or default to 3000
     port: process.env.PORT || 3000,
   },
-  // This experimental configuration ensures proper behavior on Railway
-  experimental: {
-    outputFileTracingRoot: undefined,
-  }
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
