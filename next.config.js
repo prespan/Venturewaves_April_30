@@ -1,13 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone', // Required for Railway Node deployments
+  output: 'standalone',
   images: {
-    domains: ['storage.googleapis.com', 'up.railway.app'], // Add any other domains if needed
-  },
-  experimental: {
-    serverActions: true, // Optional: for Next.js experimental features
+    domains: ['storage.googleapis.com', 'up.railway.app'],
   },
 };
 
 module.exports = nextConfig;
+;
