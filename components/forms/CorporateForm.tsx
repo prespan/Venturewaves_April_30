@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { Corporate } from '@prisma/client'
+import type { Corporate } from '@prisma/client'
 
 interface CorporateFormProps {
   corporate?: Partial<Corporate> // optional preloaded data
