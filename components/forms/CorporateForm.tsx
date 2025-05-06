@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function CorporateForm() {
-  const router = useRouter()
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -12,15 +12,18 @@ export default function CorporateForm() {
     description: '',
     notableProducts: '',
     logo: '',
-  })
+  });
+
+  // ✅ Log to help verify render
+  console.log("Corporate form loaded", formData);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const res = await fetch('/api/register/corporate', {
@@ -31,18 +34,18 @@ export default function CorporateForm() {
           industryTags: JSON.parse(formData.industryTags),
           notableProducts: JSON.parse(formData.notableProducts),
         }),
-      })
+      });
 
       if (res.ok) {
-        router.push('/dashboard/corporate')
+        router.push('/dashboard/corporate');
       } else {
-        alert('Registration failed')
+        alert('Registration failed');
       }
     } catch (error) {
-      console.error(error)
-      alert('Invalid JSON or submission error')
+      console.error(error);
+      alert('Something went wrong');
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
@@ -60,7 +63,6 @@ export default function CorporateForm() {
         value={formData.website}
         onChange={handleChange}
         className="w-full border p-2 rounded"
-        required
       />
       <input
         name="address"
@@ -68,11 +70,10 @@ export default function CorporateForm() {
         value={formData.address}
         onChange={handleChange}
         className="w-full border p-2 rounded"
-        required
       />
       <textarea
         name="industryTags"
-        placeholder='Industry Tags (JSON array e.g. ["AI", "Robotics"])'
+        placeholder='Industry Tags (JSON array e.g. ["Aerospace", "AI"])'
         value={formData.industryTags}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -80,7 +81,7 @@ export default function CorporateForm() {
       />
       <textarea
         name="description"
-        placeholder="Brief Description"
+        placeholder="Description"
         value={formData.description}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -88,7 +89,7 @@ export default function CorporateForm() {
       />
       <textarea
         name="notableProducts"
-        placeholder='Notable Products (JSON array e.g. ["AlphaCar", "CleanCore"])'
+        placeholder='Notable Products (JSON array e.g. ["JetX", "CleanCore"])'
         value={formData.notableProducts}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -96,7 +97,7 @@ export default function CorporateForm() {
       />
       <input
         name="logo"
-        placeholder="Logo URL (optional)"
+        placeholder="Logo URL"
         value={formData.logo}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -105,5 +106,5 @@ export default function CorporateForm() {
         Register
       </button>
     </form>
-  )
+  );
 }
