@@ -1,22 +1,17 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import type { Corporate } from '@prisma/client'
 
-interface CorporateFormProps {
-  corporate?: Partial<Corporate> // optional preloaded data
-}
-
-export default function CorporateForm({ corporate }: CorporateFormProps) {
+export default function CorporateForm() {
   const router = useRouter()
 
   const [formData, setFormData] = useState({
-    name: corporate?.name || '',
-    website: corporate?.website || '',
-    address: corporate?.address || '',
-    industryTags: corporate?.industryTags ? JSON.stringify(corporate.industryTags) : '',
-    description: corporate?.description || '',
-    notableProducts: corporate?.notableProducts ? JSON.stringify(corporate.notableProducts) : '',
-    logo: corporate?.logo || '',
+    name: '',
+    website: '',
+    address: '',
+    industryTags: '',
+    description: '',
+    notableProducts: '',
+    logo: '',
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -45,7 +40,7 @@ export default function CorporateForm({ corporate }: CorporateFormProps) {
       }
     } catch (error) {
       console.error(error)
-      alert('Something went wrong')
+      alert('Invalid JSON or submission error')
     }
   }
 
@@ -65,6 +60,7 @@ export default function CorporateForm({ corporate }: CorporateFormProps) {
         value={formData.website}
         onChange={handleChange}
         className="w-full border p-2 rounded"
+        required
       />
       <input
         name="address"
@@ -72,10 +68,11 @@ export default function CorporateForm({ corporate }: CorporateFormProps) {
         value={formData.address}
         onChange={handleChange}
         className="w-full border p-2 rounded"
+        required
       />
       <textarea
         name="industryTags"
-        placeholder='Industry Tags (JSON array e.g. ["Aerospace", "AI"])'
+        placeholder='Industry Tags (JSON array e.g. ["AI", "Robotics"])'
         value={formData.industryTags}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -83,7 +80,7 @@ export default function CorporateForm({ corporate }: CorporateFormProps) {
       />
       <textarea
         name="description"
-        placeholder="Description"
+        placeholder="Brief Description"
         value={formData.description}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -91,7 +88,7 @@ export default function CorporateForm({ corporate }: CorporateFormProps) {
       />
       <textarea
         name="notableProducts"
-        placeholder='Notable Products (JSON array e.g. ["JetX", "CleanCore"])'
+        placeholder='Notable Products (JSON array e.g. ["AlphaCar", "CleanCore"])'
         value={formData.notableProducts}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -99,7 +96,7 @@ export default function CorporateForm({ corporate }: CorporateFormProps) {
       />
       <input
         name="logo"
-        placeholder="Logo URL"
+        placeholder="Logo URL (optional)"
         value={formData.logo}
         onChange={handleChange}
         className="w-full border p-2 rounded"
