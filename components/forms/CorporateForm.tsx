@@ -1,44 +1,111 @@
-export default function CorporateForm({ corporate }) {
-  if (!corporate) {
-    return <p className="text-red-600">No corporate data found.</p>
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { Corporate } from '@prisma/client'
+
+interface CorporateFormProps {
+  corporate?: Partial<Corporate> // optional preloaded data
+}
+
+export default function CorporateForm({ corporate }: CorporateFormProps) {
+  const router = useRouter()
+
+  const [formData, setFormData] = useState({
+    name: corporate?.name || '',
+    website: corporate?.website || '',
+    address: corporate?.address || '',
+    industryTags: corporate?.industryTags ? JSON.stringify(corporate.industryTags) : '',
+    description: corporate?.description || '',
+    notableProducts: corporate?.notableProducts ? JSON.stringify(corporate.notableProducts) : '',
+    logo: corporate?.logo || '',
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    try {
+      const res = await fetch('/api/register/corporate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          industryTags: JSON.parse(formData.industryTags),
+          notableProducts: JSON.parse(formData.notableProducts),
+        }),
+      })
+
+      if (res.ok) {
+        router.push('/dashboard/corporate')
+      } else {
+        alert('Registration failed')
+      }
+    } catch (error) {
+      console.error(error)
+      alert('Something went wrong')
+    }
   }
 
   return (
-    <form className="space-y-4 w-full max-w-xl">
+    <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
       <input
-        type="text"
         name="name"
-        defaultValue={corporate.name}
         placeholder="Company Name"
-        className="w-full p-2 border border-gray-300 rounded"
+        value={formData.name}
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+        required
       />
       <input
-        type="text"
         name="website"
-        defaultValue={corporate.website}
         placeholder="Website"
-        className="w-full p-2 border border-gray-300 rounded"
+        value={formData.website}
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+      />
+      <input
+        name="address"
+        placeholder="Address"
+        value={formData.address}
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+      />
+      <textarea
+        name="industryTags"
+        placeholder='Industry Tags (JSON array e.g. ["Aerospace", "AI"])'
+        value={formData.industryTags}
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+        required
       />
       <textarea
         name="description"
-        defaultValue={corporate.description}
         placeholder="Description"
-        className="w-full p-2 border border-gray-300 rounded"
+        value={formData.description}
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+        required
+      />
+      <textarea
+        name="notableProducts"
+        placeholder='Notable Products (JSON array e.g. ["JetX", "CleanCore"])'
+        value={formData.notableProducts}
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
+        required
       />
       <input
-        type="text"
-        name="address"
-        defaultValue={corporate.address}
-        placeholder="Address"
-        className="w-full p-2 border border-gray-300 rounded"
+        name="logo"
+        placeholder="Logo URL"
+        value={formData.logo}
+        onChange={handleChange}
+        className="w-full border p-2 rounded"
       />
-      {/* You can add more fields like industryTags, logo, etc. here */}
-
-      <button
-        type="submit"
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow"
-      >
-        Submit
+      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+        Register
       </button>
     </form>
   )
