@@ -1,38 +1,73 @@
 'use client'
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 
-export default function CorporateForm() {
-  const router = useRouter();
+interface CorporateData {
+  name?: string
+  website?: string
+  address?: string
+  industryTags?: string
+  description?: string
+  notableProducts?: string
+  logo?: string
+}
+
+interface CorporateFormProps {
+  corporate?: CorporateData
+  mode?: 'demo' | 'live' // toggle mode
+}
+
+export default function CorporateForm({ corporate, mode = 'live' }: CorporateFormProps) {
+  const router = useRouter()
 
   const [formData, setFormData] = useState({
-    name: '',
-    website: '',
-    address: '',
-    industryTags: '',
-    description: '',
-    notableProducts: '',
-    logo: '',
-  });
+    name: corporate?.name || '',
+    website: corporate?.website || '',
+    address: corporate?.address || '',
+    industryTags: corporate?.industryTags || '',
+    description: corporate?.description || '',
+    notableProducts: corporate?.notableProducts || '',
+    logo: corporate?.logo || '',
+  })
 
   useEffect(() => {
-    console.log('CorporateForm mounted');
-  }, []);
-
-  console.log('Rendering CorporateForm');
+    console.log('CorporateForm mounted')
+  }, [])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('Submitted!'); // Replace later with actual API call
-  };
+    e.preventDefault()
+
+    if (mode === 'demo') {
+      alert('This is demo mode — data will not be submitted.')
+      return
+    }
+
+    try {
+      const res = await fetch('/api/register/corporate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (res.ok) {
+        alert('Registered successfully')
+        router.push('/dashboard/corporate')
+      } else {
+        alert('Submission failed')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('An error occurred')
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
@@ -86,9 +121,14 @@ export default function CorporateForm() {
         onChange={handleChange}
         className="w-full border p-2 rounded"
       />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-        Register
+
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+        disabled={mode === 'demo'}
+      >
+        {mode === 'demo' ? 'Demo Mode – Disabled' : 'Register'}
       </button>
     </form>
-  );
+  )
 }
