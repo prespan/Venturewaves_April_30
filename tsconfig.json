@@ -16,7 +16,7 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve", // ✅ key fix to avoid jsxDEV error
+    "jsx": "preserve",
     "incremental": true,
     "types": [
       "node"
