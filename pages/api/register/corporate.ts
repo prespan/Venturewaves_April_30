@@ -1,33 +1,30 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/prisma'; // ✅ Correct default import
+// pages/api/register/corporate.ts
+import { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '@/lib/prisma'; // Adjust based on your actual import path
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Method Not Allowed' });
-  }
+  if (req.method === 'GET') {
+    const { demo } = req.query;
 
-  const isDemo = req.query.demo === 'true';
+    if (demo === 'true') {
+      try {
+        const corp = await prisma.corporate.findFirst({
+          where: { name: 'Siemens' },
+        });
 
-  try {
-    const corporate = await prisma.corporate.findFirst({
-      where: isDemo ? { name: 'Siemens' } : {},
-    });
+        if (!corp) {
+          return res.status(404).json({ error: 'Demo corporate not found' });
+        }
 
-    if (!corporate) {
-      return res.status(404).json({ message: 'Corporate data not found' });
+        return res.status(200).json(corp);
+      } catch (error) {
+        console.error('[GET /api/register/corporate]', error);
+        return res.status(500).json({ error: 'Server error' });
+      }
     }
 
-    return res.status(200).json({
-      name: corporate.name,
-      website: corporate.website,
-      address: corporate.address,
-      industryTags: corporate.industryTags,
-      description: corporate.description,
-      notableProducts: corporate.notableProducts,
-      logo: corporate.logo,
-    });
-  } catch (error) {
-    console.error('API error:', error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(400).json({ error: 'Invalid query parameter' });
   }
+
+  return res.status(405).json({ error: 'Method Not Allowed' });
 }
