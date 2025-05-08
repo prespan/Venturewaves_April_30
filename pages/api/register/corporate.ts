@@ -1,27 +1,33 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma'; // adjust path if needed
+import type { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '@/lib/prisma'; // ✅ Correct default import
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    if (req.query.demo === 'true') {
-      // Return Siemens as demo data
-      const demo = await prisma.corporate.findFirst({
-        where: { name: 'Siemens' },
-      });
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
+  }
 
-      if (!demo) return res.status(404).json({ error: 'Demo data not found' });
-      return res.status(200).json(demo);
+  const isDemo = req.query.demo === 'true';
+
+  try {
+    const corporate = await prisma.corporate.findFirst({
+      where: isDemo ? { name: 'Siemens' } : {},
+    });
+
+    if (!corporate) {
+      return res.status(404).json({ message: 'Corporate data not found' });
     }
 
-    return res.status(400).json({ error: 'Missing or invalid query param' });
+    return res.status(200).json({
+      name: corporate.name,
+      website: corporate.website,
+      address: corporate.address,
+      industryTags: corporate.industryTags,
+      description: corporate.description,
+      notableProducts: corporate.notableProducts,
+      logo: corporate.logo,
+    });
+  } catch (error) {
+    console.error('API error:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
-
-  if (req.method === 'POST') {
-    const data = req.body;
-    const created = await prisma.corporate.create({ data });
-    return res.status(201).json(created);
-  }
-
-  res.setHeader('Allow', ['GET', 'POST']);
-  return res.status(405).end(`Method ${req.method} Not Allowed`);
 }
