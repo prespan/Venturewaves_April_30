@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 // Type for a single message with optional filtering by user
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
