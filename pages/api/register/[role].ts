@@ -8,7 +8,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { role } = req.query;
+  const { role, name } = req.query;
+
   const validRoles = ['studio', 'corporate', 'government', 'investor', 'research'];
 
   if (typeof role !== 'string' || !validRoles.includes(role)) {
@@ -20,24 +21,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     switch (role) {
       case 'studio':
-        data = await prisma.studio.findFirst();
+        data = await prisma.studio.findFirst({
+          where: name ? { name: String(name) } : undefined,
+        });
         break;
       case 'corporate':
-        data = await prisma.corporate.findFirst();
+        data = await prisma.corporate.findFirst({
+          where: name ? { name: String(name) } : undefined,
+        });
         break;
       case 'government':
-        data = await prisma.government.findFirst();
+        data = await prisma.government.findFirst({
+          where: name ? { name: String(name) } : undefined,
+        });
         break;
       case 'investor':
-        data = await prisma.investor.findFirst();
+        data = await prisma.investor.findFirst({
+          where: name ? { name: String(name) } : undefined,
+        });
         break;
       case 'research':
-        data = await prisma.researchOrganization.findFirst();
+        data = await prisma.researchOrganization.findFirst({
+          where: name ? { name: String(name) } : undefined,
+        });
         break;
     }
 
     if (!data) {
-      return res.status(404).json({ error: `No ${role} data found` });
+      return res.status(404).json({ error: `No ${role} organization found${name ? ` with name "${name}"` : ''}` });
     }
 
     return res.status(200).json(data);
