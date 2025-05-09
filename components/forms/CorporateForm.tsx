@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface CorporateData {
   id?: number
@@ -18,6 +19,8 @@ interface CorporateFormProps {
 }
 
 export default function CorporateForm({ data }: CorporateFormProps) {
+  const router = useRouter()
+
   const [formData, setFormData] = useState<CorporateData>(() => ({
     id: data?.id,
     name: data?.name || '',
@@ -44,9 +47,11 @@ export default function CorporateForm({ data }: CorporateFormProps) {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    alert('Form submitted (placeholder)')
+    if (data?.id) {
+      router.push(`/dashboard/corporate?id=${data.id}`)
+    }
   }
 
   return (
