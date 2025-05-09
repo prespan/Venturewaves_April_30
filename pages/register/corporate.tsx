@@ -29,7 +29,7 @@ export default function CorporateRegistrationPage() {
     fetchData()
   }, [orgName])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (existingCorporate?.id) {
       router.push(`/dashboard/corporate?id=${existingCorporate.id}`)
