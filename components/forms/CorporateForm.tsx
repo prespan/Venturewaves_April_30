@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 interface CorporateData {
-  id?: number;
-  name: string;
-  website: string;
-  address: string;
-  industryTags: string;
-  description: string;
-  notableProducts: string;
-  logo?: string;
+  id?: number
+  name: string
+  website: string
+  address: string
+  industryTags: string[]
+  description: string
+  notableProducts: string[]
+  logo?: string
 }
 
 interface CorporateFormProps {
@@ -19,27 +19,35 @@ interface CorporateFormProps {
 
 export default function CorporateForm({ data }: CorporateFormProps) {
   const [formData, setFormData] = useState<CorporateData>(() => ({
-  id: data?.id,
-  name: data?.name || '',
-  website: data?.website || '',
-  address: data?.address || '',
-  industryTags: JSON.stringify(data?.industryTags || []),
-  description: data?.description || '',
-  notableProducts: JSON.stringify(data?.notableProducts || []),
-  logo: data?.logo || '',
-}))
+    id: data?.id,
+    name: data?.name || '',
+    website: data?.website || '',
+    address: data?.address || '',
+    industryTags: data?.industryTags || [],
+    description: data?.description || '',
+    notableProducts: data?.notableProducts || [],
+    logo: data?.logo || '',
+  }))
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+
+    if (name === 'industryTags' || name === 'notableProducts') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value.split(',').map(tag => tag.trim()),
+      }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('Form submitted (placeholder)');
-  };
+    e.preventDefault()
+    alert('Form submitted (placeholder)')
+  }
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
@@ -67,8 +75,8 @@ export default function CorporateForm({ data }: CorporateFormProps) {
       />
       <textarea
         name="industryTags"
-        placeholder='Industry Tags (e.g. ["Aerospace"])'
-        value={formData.industryTags}
+        placeholder='Industry Tags (e.g. Mobility, Energy)'
+        value={formData.industryTags.join(', ')}
         onChange={handleChange}
         className="w-full border p-2 rounded"
       />
@@ -81,8 +89,8 @@ export default function CorporateForm({ data }: CorporateFormProps) {
       />
       <textarea
         name="notableProducts"
-        placeholder='Notable Products (e.g. ["JetX"])'
-        value={formData.notableProducts}
+        placeholder='Notable Products (e.g. Smart Grid, Urban Mobility)'
+        value={formData.notableProducts.join(', ')}
         onChange={handleChange}
         className="w-full border p-2 rounded"
       />
@@ -97,5 +105,5 @@ export default function CorporateForm({ data }: CorporateFormProps) {
         Register
       </button>
     </form>
-  );
+  )
 }
