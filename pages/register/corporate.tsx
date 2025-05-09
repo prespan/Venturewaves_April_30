@@ -1,4 +1,5 @@
 'use client'
+
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import CorporateForm from '../../components/forms/CorporateForm'
@@ -27,11 +28,12 @@ export default function CorporateRegistrationPage() {
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/register/preload-corporate?name=${encodeURIComponent(orgName)}`)
+        const res = await fetch(`/api/register/corporate?name=${encodeURIComponent(orgName)}`)
+        if (!res.ok) throw new Error('Failed to fetch org')
         const data = await res.json()
         setExistingCorporate(data)
       } catch (err) {
-        console.error('Failed to fetch org:', err)
+        console.error('Failed to fetch organization data:', err)
       } finally {
         setLoading(false)
       }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-export type Corporate = {
+type CorporateData = {
   name: string
   website: string
   address: string
@@ -13,46 +13,36 @@ export type Corporate = {
 }
 
 type Props = {
-  data?: Corporate // optional, used for preloading
+  data: CorporateData
 }
 
 export default function CorporateForm({ data }: Props) {
-  const [formData, setFormData] = useState<Corporate>({
-    name: '',
-    website: '',
-    address: '',
-    industryTags: [],
-    description: '',
-    notableProducts: [],
-    logo: '',
+  const [formData, setFormData] = useState({
+    name: data.name || '',
+    website: data.website || '',
+    address: data.address || '',
+    industryTags: (data.industryTags || []).join(', '),
+    description: data.description || '',
+    notableProducts: (data.notableProducts || []).join(', '),
+    logo: data.logo || '',
   })
-
-  useEffect(() => {
-    if (data) {
-      setFormData(data)
-    }
-  }, [data])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: ['industryTags', 'notableProducts'].includes(name)
-        ? value.split(',').map(s => s.trim())
-        : value,
-    }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   return (
-    <div className="w-full max-w-lg space-y-4">
+    <div className="w-full space-y-4">
       <input
         name="name"
         placeholder="Company Name"
         value={formData.name}
         onChange={handleChange}
         className="w-full border p-2 rounded"
+        required
       />
       <input
         name="website"
@@ -71,7 +61,7 @@ export default function CorporateForm({ data }: Props) {
       <textarea
         name="industryTags"
         placeholder="Industry Tags (e.g. Mobility, Energy)"
-        value={formData.industryTags.join(', ')}
+        value={formData.industryTags}
         onChange={handleChange}
         className="w-full border p-2 rounded"
       />
@@ -85,14 +75,14 @@ export default function CorporateForm({ data }: Props) {
       <textarea
         name="notableProducts"
         placeholder="Notable Products (e.g. Smart Grid, Urban Mobility)"
-        value={formData.notableProducts.join(', ')}
+        value={formData.notableProducts}
         onChange={handleChange}
         className="w-full border p-2 rounded"
       />
       <input
         name="logo"
         placeholder="Logo URL"
-        value={formData.logo || ''}
+        value={formData.logo}
         onChange={handleChange}
         className="w-full border p-2 rounded"
       />
