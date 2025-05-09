@@ -1,16 +1,47 @@
-import { useState } from 'react'
-import useSWR from 'swr'
-import Link from 'next/link'
-import { LayoutDashboard, FilePlus, Flame, FolderOpen, Users, MessageSquare, Calendar, Lock } from 'lucide-react'
+'use client'
 
-const fetcher = (url: string) => fetch(url).then(res => res.json())
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import {
+  LayoutDashboard,
+  FilePlus,
+  Flame,
+  FolderOpen,
+  Users,
+  MessageSquare,
+  Calendar,
+} from 'lucide-react'
 
 export default function CorporateDashboard() {
-  const { data: challenges } = useSWR('/api/challenges', fetcher)
-  const { data: proposals } = useSWR('/api/proposals', fetcher)
-  const { data: projects } = useSWR('/api/projects', fetcher)
-
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
+  const [corporate, setCorporate] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<'challenges' | 'proposals' | 'projects' | 'partners' | 'messages' | 'calendar'>('challenges')
+
+  useEffect(() => {
+    if (!id) return
+
+    const fetchCorporate = async () => {
+      try {
+        const res = await fetch(`/api/dashboard/corporate?id=${id}`)
+        const data = await res.json()
+        setCorporate(data)
+      } catch (err) {
+        console.error('Failed to fetch dashboard data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCorporate()
+  }, [id])
+
+  if (loading) return <p className="text-center p-8">Loading organization data...</p>
+  if (!corporate) return <p className="text-center p-8 text-red-500">Corporate not found.</p>
+
+  const allProposals = corporate.challenges?.flatMap((c: any) => c.proposals || []) || []
+  const allProjects = corporate.challenges?.flatMap((c: any) => c.project ? [c.project] : []) || []
 
   return (
     <div className="p-6 space-y-6">
@@ -29,12 +60,12 @@ export default function CorporateDashboard() {
 
       {tab === 'challenges' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {challenges?.map((challenge: any) => (
+          {corporate.challenges?.map((challenge: any) => (
             <div key={challenge.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">{challenge.title}</h2>
               <p className="text-sm text-gray-600 mb-2 line-clamp-3">{challenge.description}</p>
               <p className="text-xs text-gray-500 mb-3">Deadline: {new Date(challenge.deadline).toLocaleDateString()}</p>
-              <Link href={`/challenges/${challenge.id}`} className="text-orange-600 text-sm font-medium hover:underline">Manage Challenge</Link>
+              <p className="text-xs text-gray-500">Proposals: {challenge.proposals?.length || 0}</p>
             </div>
           ))}
         </div>
@@ -42,12 +73,11 @@ export default function CorporateDashboard() {
 
       {tab === 'proposals' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {proposals?.map((proposal: any) => (
+          {allProposals.map((proposal: any) => (
             <div key={proposal.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">{proposal.title}</h2>
-              <p className="text-sm text-gray-600 mb-1">Challenge ID: {proposal.challengeId}</p>
+              <p className="text-sm text-gray-600 mb-1">Submitted By: {proposal.submittedBy}</p>
               <p className="text-xs text-gray-500 mb-3">Status: {proposal.status}</p>
-              <Link href={`/proposals/${proposal.id}`} className="text-orange-600 text-sm font-medium hover:underline">Review Proposal</Link>
             </div>
           ))}
         </div>
@@ -55,12 +85,11 @@ export default function CorporateDashboard() {
 
       {tab === 'projects' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {projects?.map((project: any) => (
+          {allProjects.map((project: any) => (
             <div key={project.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">Project #{project.id}</h2>
               <p className="text-sm text-gray-600 mb-1">Investment: ${project.investment}</p>
               <p className="text-xs text-gray-500 mb-3">Milestones: {project.milestones?.length}</p>
-              <Link href={`/projects/${project.id}`} className="text-orange-600 text-sm font-medium hover:underline">View Project</Link>
             </div>
           ))}
         </div>
