@@ -1,32 +1,50 @@
-// /pages/dashboard/corporate.tsx
-import { GetServerSideProps } from 'next';
-import prisma from '@/lib/prisma';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { LucideBriefcase, LucideRocket, LucideMessagesSquare } from 'lucide-react';
+'use client'
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { LucideBriefcase, LucideRocket, LucideMessagesSquare } from 'lucide-react'
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const userId = Number(context.query.id); // adjust based on auth
+export default function CorporateDashboard() {
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
+  const [corporate, setCorporate] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
-  const corporate = await prisma.corporate.findUnique({
-    where: { id: userId },
-    include: {
-      challenges: {
-        include: { proposals: true },
-      },
-    },
-  });
+  useEffect(() => {
+    if (!id) return
 
-  return { props: { corporate } };
-};
+    const fetchCorporate = async () => {
+      try {
+        const res = await fetch(`/api/dashboard/corporate?id=${id}`)
+        const data = await res.json()
+        setCorporate(data)
+      } catch (err) {
+        console.error('Failed to fetch dashboard data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-export default function CorporateDashboard({ corporate }) {
-  const totalProposals = corporate.challenges.reduce((acc, c) => acc + c.proposals.length, 0);
+    fetchCorporate()
+  }, [id])
+
+  if (loading) return <p className="text-center p-8">Loading dashboard...</p>
+  if (!corporate) return <p className="text-center p-8 text-red-500">Corporate not found.</p>
+
+  const totalProposals = corporate.challenges.reduce(
+    (acc, c) => acc + c.proposals.length,
+    0
+  )
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-bold mb-6 text-gray-900">Welcome, {corporate.name}</h1>
+      <h1 className="text-4xl font-bold mb-6 text-gray-900">
+        Welcome, {corporate.name} 👋
+      </h1>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <Card>
           <CardContent className="p-6 flex flex-col items-start">
@@ -84,5 +102,5 @@ export default function CorporateDashboard({ corporate }) {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }
