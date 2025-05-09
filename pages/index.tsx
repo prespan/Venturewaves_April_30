@@ -1,5 +1,7 @@
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+'use client'
+
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 const logos = [
   'catapult.png',
@@ -13,17 +15,34 @@ const logos = [
   'byld.png',
   'coplex.png',
   'boomerang.png',
-];
+]
 
 export default function Home() {
-  const router = useRouter();
-  const [role, setRole] = useState('');
+  const router = useRouter()
+  const [role, setRole] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleStart = () => {
-    if (role) {
-      router.push(`/register/${role}`);
+  const handleStart = async () => {
+    if (!role) return
+    setLoading(true)
+
+    try {
+      const res = await fetch(`/api/register/${role}`)
+      const org = await res.json()
+
+      if (!res.ok || !org?.name) {
+        alert(`No ${role} organization found`)
+        return
+      }
+
+      router.push(`/register/${role}?name=${encodeURIComponent(org.name)}`)
+    } catch (err) {
+      console.error(err)
+      alert('Failed to fetch organization')
+    } finally {
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col items-center justify-center px-6 py-16 space-y-16">
@@ -53,10 +72,10 @@ export default function Home() {
         </select>
         <button
           onClick={handleStart}
-          disabled={!role}
+          disabled={!role || loading}
           className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-6 py-2 rounded font-medium transition shadow"
         >
-          Get Started →
+          {loading ? 'Loading...' : 'Get Started →'}
         </button>
       </div>
 
@@ -72,5 +91,5 @@ export default function Home() {
         ))}
       </div>
     </div>
-  );
+  )
 }

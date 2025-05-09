@@ -3,12 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import CorporateForm from '../../components/forms/CorporateForm'
 
-export default function CorporateRegistrationPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const orgName = searchParams.get('name') // e.g., ?name=Siemens
-
-  type Corporate = {
+type Corporate = {
   id: number
   name: string
   website: string
@@ -18,7 +13,13 @@ export default function CorporateRegistrationPage() {
   notableProducts: string[]
   logo?: string
 }
-const [existingCorporate, setExistingCorporate] = useState<Corporate | null>(null)
+
+export default function CorporateRegistrationPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const orgName = searchParams.get('name')
+
+  const [existingCorporate, setExistingCorporate] = useState<Corporate | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const [existingCorporate, setExistingCorporate] = useState<Corporate | null>(nul
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/preload/corporate?name=${encodeURIComponent(orgName)}`)
+        const res = await fetch(`/api/register/preload-corporate?name=${encodeURIComponent(orgName)}`)
         const data = await res.json()
         setExistingCorporate(data)
       } catch (err) {
