@@ -1,10 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-interface CorporateData {
-  id?: number
+export type Corporate = {
   name: string
   website: string
   address: string
@@ -14,55 +12,47 @@ interface CorporateData {
   logo?: string
 }
 
-interface CorporateFormProps {
-  data?: CorporateData
+type Props = {
+  data?: Corporate // optional, used for preloading
 }
 
-export default function CorporateForm({ data }: CorporateFormProps) {
-  const router = useRouter()
+export default function CorporateForm({ data }: Props) {
+  const [formData, setFormData] = useState<Corporate>({
+    name: '',
+    website: '',
+    address: '',
+    industryTags: [],
+    description: '',
+    notableProducts: [],
+    logo: '',
+  })
 
-  const [formData, setFormData] = useState<CorporateData>(() => ({
-    id: data?.id,
-    name: data?.name || '',
-    website: data?.website || '',
-    address: data?.address || '',
-    industryTags: data?.industryTags || [],
-    description: data?.description || '',
-    notableProducts: data?.notableProducts || [],
-    logo: data?.logo || '',
-  }))
+  useEffect(() => {
+    if (data) {
+      setFormData(data)
+    }
+  }, [data])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
-
-    if (name === 'industryTags' || name === 'notableProducts') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value.split(',').map(tag => tag.trim()),
-      }))
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }))
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (data?.id) {
-      router.push(`/dashboard/corporate?id=${data.id}`)
-    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: ['industryTags', 'notableProducts'].includes(name)
+        ? value.split(',').map(s => s.trim())
+        : value,
+    }))
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
+    <div className="w-full max-w-lg space-y-4">
       <input
         name="name"
         placeholder="Company Name"
         value={formData.name}
         onChange={handleChange}
         className="w-full border p-2 rounded"
-        required
       />
       <input
         name="website"
@@ -80,7 +70,7 @@ export default function CorporateForm({ data }: CorporateFormProps) {
       />
       <textarea
         name="industryTags"
-        placeholder='Industry Tags (e.g. Mobility, Energy)'
+        placeholder="Industry Tags (e.g. Mobility, Energy)"
         value={formData.industryTags.join(', ')}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -94,7 +84,7 @@ export default function CorporateForm({ data }: CorporateFormProps) {
       />
       <textarea
         name="notableProducts"
-        placeholder='Notable Products (e.g. Smart Grid, Urban Mobility)'
+        placeholder="Notable Products (e.g. Smart Grid, Urban Mobility)"
         value={formData.notableProducts.join(', ')}
         onChange={handleChange}
         className="w-full border p-2 rounded"
@@ -102,13 +92,10 @@ export default function CorporateForm({ data }: CorporateFormProps) {
       <input
         name="logo"
         placeholder="Logo URL"
-        value={formData.logo}
+        value={formData.logo || ''}
         onChange={handleChange}
         className="w-full border p-2 rounded"
       />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-        Register
-      </button>
-    </form>
+    </div>
   )
 }
