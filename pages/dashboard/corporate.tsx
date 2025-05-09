@@ -1,9 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Card, CardContent } from '../../components/ui/card'
+import { Button } from '../../components/ui/button'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs'
 import { LucideBriefcase, LucideRocket, LucideMessagesSquare } from 'lucide-react'
 
 export default function CorporateDashboard() {
