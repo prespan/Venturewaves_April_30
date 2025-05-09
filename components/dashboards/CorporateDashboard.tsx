@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import Link from 'next/link'
 import {
   LayoutDashboard,
   FilePlus,
@@ -9,39 +9,36 @@ import {
   FolderOpen,
   Users,
   MessageSquare,
-  Calendar,
+  Calendar
 } from 'lucide-react'
 
-export default function CorporateDashboard() {
-  const searchParams = useSearchParams()
-  const id = searchParams.get('id')
-  const [corporate, setCorporate] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [tab, setTab] = useState<'challenges' | 'proposals' | 'projects' | 'partners' | 'messages' | 'calendar'>('challenges')
+type CorporateDashboardProps = {
+  corporate: {
+    challenges: {
+      id: number
+      title: string
+      description: string
+      deadline: string
+      proposals: {
+        id: number
+        title: string
+        status: string
+      }[]
+    }[]
+    projects: {
+      id: number
+      investment: number
+      milestones: {
+        id: number
+      }[]
+    }[]
+  }
+}
 
-  useEffect(() => {
-    if (!id) return
-
-    const fetchCorporate = async () => {
-      try {
-        const res = await fetch(`/api/dashboard/corporate?id=${id}`)
-        const data = await res.json()
-        setCorporate(data)
-      } catch (err) {
-        console.error('Failed to fetch dashboard data:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCorporate()
-  }, [id])
-
-  if (loading) return <p className="text-center p-8">Loading organization data...</p>
-  if (!corporate) return <p className="text-center p-8 text-red-500">Corporate not found.</p>
-
-  const allProposals = corporate.challenges?.flatMap((c: any) => c.proposals || []) || []
-  const allProjects = corporate.challenges?.flatMap((c: any) => c.project ? [c.project] : []) || []
+export default function CorporateDashboard({ corporate }: CorporateDashboardProps) {
+  const [tab, setTab] = useState<
+    'challenges' | 'proposals' | 'projects' | 'partners' | 'messages' | 'calendar'
+  >('challenges')
 
   return (
     <div className="p-6 space-y-6">
@@ -50,22 +47,34 @@ export default function CorporateDashboard() {
       </div>
 
       <div className="flex flex-wrap gap-6 border-b pb-2 text-sm font-medium text-gray-600">
-        <button onClick={() => setTab('challenges')} className={`flex items-center gap-1 ${tab === 'challenges' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}><FilePlus className="w-4 h-4" /> My Challenges</button>
-        <button onClick={() => setTab('proposals')} className={`flex items-center gap-1 ${tab === 'proposals' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}><Flame className="w-4 h-4" /> Incoming Proposals</button>
-        <button onClick={() => setTab('projects')} className={`flex items-center gap-1 ${tab === 'projects' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}><FolderOpen className="w-4 h-4" /> Projects</button>
-        <button onClick={() => setTab('partners')} className={`flex items-center gap-1 ${tab === 'partners' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}><Users className="w-4 h-4" /> Partner Matching</button>
-        <button onClick={() => setTab('messages')} className={`flex items-center gap-1 ${tab === 'messages' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}><MessageSquare className="w-4 h-4" /> Messaging</button>
-        <button onClick={() => setTab('calendar')} className={`flex items-center gap-1 ${tab === 'calendar' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}><Calendar className="w-4 h-4" /> Calendar</button>
+        <button onClick={() => setTab('challenges')} className={`flex items-center gap-1 ${tab === 'challenges' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}>
+          <FilePlus className="w-4 h-4" /> My Challenges
+        </button>
+        <button onClick={() => setTab('proposals')} className={`flex items-center gap-1 ${tab === 'proposals' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}>
+          <Flame className="w-4 h-4" /> Incoming Proposals
+        </button>
+        <button onClick={() => setTab('projects')} className={`flex items-center gap-1 ${tab === 'projects' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}>
+          <FolderOpen className="w-4 h-4" /> Projects
+        </button>
+        <button onClick={() => setTab('partners')} className={`flex items-center gap-1 ${tab === 'partners' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}>
+          <Users className="w-4 h-4" /> Partner Matching
+        </button>
+        <button onClick={() => setTab('messages')} className={`flex items-center gap-1 ${tab === 'messages' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}>
+          <MessageSquare className="w-4 h-4" /> Messaging
+        </button>
+        <button onClick={() => setTab('calendar')} className={`flex items-center gap-1 ${tab === 'calendar' ? 'text-orange-600 border-b-2 border-orange-600' : ''}`}>
+          <Calendar className="w-4 h-4" /> Calendar
+        </button>
       </div>
 
       {tab === 'challenges' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {corporate.challenges?.map((challenge: any) => (
+          {corporate?.challenges?.map((challenge) => (
             <div key={challenge.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">{challenge.title}</h2>
               <p className="text-sm text-gray-600 mb-2 line-clamp-3">{challenge.description}</p>
               <p className="text-xs text-gray-500 mb-3">Deadline: {new Date(challenge.deadline).toLocaleDateString()}</p>
-              <p className="text-xs text-gray-500">Proposals: {challenge.proposals?.length || 0}</p>
+              <Link href={`/challenges/${challenge.id}`} className="text-orange-600 text-sm font-medium hover:underline">Manage Challenge</Link>
             </div>
           ))}
         </div>
@@ -73,11 +82,11 @@ export default function CorporateDashboard() {
 
       {tab === 'proposals' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {allProposals.map((proposal: any) => (
+          {corporate?.challenges?.flatMap((c) => c.proposals)?.map((proposal) => (
             <div key={proposal.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">{proposal.title}</h2>
-              <p className="text-sm text-gray-600 mb-1">Submitted By: {proposal.submittedBy}</p>
-              <p className="text-xs text-gray-500 mb-3">Status: {proposal.status}</p>
+              <p className="text-sm text-gray-600 mb-1">Status: {proposal.status}</p>
+              <Link href={`/proposals/${proposal.id}`} className="text-orange-600 text-sm font-medium hover:underline">Review Proposal</Link>
             </div>
           ))}
         </div>
@@ -85,11 +94,12 @@ export default function CorporateDashboard() {
 
       {tab === 'projects' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {allProjects.map((project: any) => (
+          {corporate?.projects?.map((project) => (
             <div key={project.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">Project #{project.id}</h2>
               <p className="text-sm text-gray-600 mb-1">Investment: ${project.investment}</p>
               <p className="text-xs text-gray-500 mb-3">Milestones: {project.milestones?.length}</p>
+              <Link href={`/projects/${project.id}`} className="text-orange-600 text-sm font-medium hover:underline">View Project</Link>
             </div>
           ))}
         </div>
