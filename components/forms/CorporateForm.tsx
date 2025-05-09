@@ -14,20 +14,20 @@ interface CorporateData {
 }
 
 interface CorporateFormProps {
-  data: CorporateData;
+  data?: CorporateData
 }
 
 export default function CorporateForm({ data }: CorporateFormProps) {
-  const [formData, setFormData] = useState<CorporateData>({
-    id: data.id,
-    name: data.name,
-    website: data.website,
-    address: data.address,
-    industryTags: JSON.stringify(data.industryTags),
-    description: data.description,
-    notableProducts: JSON.stringify(data.notableProducts),
-    logo: data.logo || '',
-  });
+  const [formData, setFormData] = useState<CorporateData>(() => ({
+  id: data?.id,
+  name: data?.name || '',
+  website: data?.website || '',
+  address: data?.address || '',
+  industryTags: JSON.stringify(data?.industryTags || []),
+  description: data?.description || '',
+  notableProducts: JSON.stringify(data?.notableProducts || []),
+  logo: data?.logo || '',
+}))
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
