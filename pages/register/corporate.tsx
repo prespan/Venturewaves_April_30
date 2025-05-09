@@ -8,7 +8,17 @@ export default function CorporateRegistrationPage() {
   const searchParams = useSearchParams()
   const orgName = searchParams.get('name') // e.g., ?name=Siemens
 
-  const [existingCorporate, setExistingCorporate] = useState(null)
+  type Corporate = {
+  id: number
+  name: string
+  website: string
+  address: string
+  industryTags: string[]
+  description: string
+  notableProducts: string[]
+  logo?: string
+}
+const [existingCorporate, setExistingCorporate] = useState<Corporate | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
