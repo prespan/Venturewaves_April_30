@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 interface CorporateData {
+  id?: number;
   name: string;
   website: string;
   address: string;
@@ -12,43 +13,21 @@ interface CorporateData {
   logo?: string;
 }
 
-export default function CorporateForm() {
+interface CorporateFormProps {
+  data: CorporateData;
+}
+
+export default function CorporateForm({ data }: CorporateFormProps) {
   const [formData, setFormData] = useState<CorporateData>({
-    name: '',
-    website: '',
-    address: '',
-    industryTags: '',
-    description: '',
-    notableProducts: '',
-    logo: '',
+    id: data.id,
+    name: data.name,
+    website: data.website,
+    address: data.address,
+    industryTags: JSON.stringify(data.industryTags),
+    description: data.description,
+    notableProducts: JSON.stringify(data.notableProducts),
+    logo: data.logo || '',
   });
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('/api/register/corporate?demo=true');
-        if (!res.ok) throw new Error('Failed to load');
-        const data = await res.json();
-        setFormData({
-          name: data.name || '',
-          website: data.website || '',
-          address: data.address || '',
-          industryTags: JSON.stringify(data.industryTags || []),
-          description: data.description || '',
-          notableProducts: JSON.stringify(data.notableProducts || []),
-          logo: data.logo || '',
-        });
-      } catch (error) {
-        console.error('Preload error:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -61,8 +40,6 @@ export default function CorporateForm() {
     e.preventDefault();
     alert('Form submitted (placeholder)');
   };
-
-  if (loading) return <p>Loading...</p>;
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
