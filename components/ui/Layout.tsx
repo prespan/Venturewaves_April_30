@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
         <nav className="space-y-2">
           {menu.map((item) => {
-            const isActive = router.pathname === item.href;
+            const isActive = router.asPath.startsWith(item.href);
             return (
               <Link
                 key={item.href}
