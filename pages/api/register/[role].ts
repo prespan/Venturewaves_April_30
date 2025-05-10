@@ -21,33 +21,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     switch (role) {
       case 'studio':
-        data = await prisma.studio.findFirst({
-          where: name ? { name: String(name) } : undefined,
-        });
+        data = name
+          ? await prisma.studio.findFirst({ where: { name: String(name) } })
+          : await prisma.studio.findMany({ select: { id: true, name: true } });
         break;
+
       case 'corporate':
-        data = await prisma.corporate.findFirst({
-          where: name ? { name: String(name) } : undefined,
-        });
+        data = name
+          ? await prisma.corporate.findFirst({ where: { name: String(name) } })
+          : await prisma.corporate.findMany({ select: { id: true, name: true } });
         break;
+
       case 'government':
-        data = await prisma.government.findFirst({
-          where: name ? { name: String(name) } : undefined,
-        });
+        data = name
+          ? await prisma.government.findFirst({ where: { name: String(name) } })
+          : await prisma.government.findMany({ select: { id: true, name: true } });
         break;
+
       case 'investor':
-        data = await prisma.investor.findFirst({
-          where: name ? { name: String(name) } : undefined,
-        });
+        data = name
+          ? await prisma.investor.findFirst({ where: { name: String(name) } })
+          : await prisma.investor.findMany({ select: { id: true, name: true } });
         break;
+
       case 'research':
-        data = await prisma.researchOrganization.findFirst({
-          where: name ? { name: String(name) } : undefined,
-        });
+        data = name
+          ? await prisma.researchOrganization.findFirst({ where: { name: String(name) } })
+          : await prisma.researchOrganization.findMany({ select: { id: true, name: true } });
         break;
     }
 
-    if (!data) {
+    if (!data || (Array.isArray(data) && data.length === 0)) {
       return res.status(404).json({ error: `No ${role} organization found${name ? ` with name "${name}"` : ''}` });
     }
 
