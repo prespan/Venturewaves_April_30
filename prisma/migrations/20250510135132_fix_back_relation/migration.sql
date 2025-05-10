@@ -110,12 +110,25 @@ CREATE TABLE "Project" (
     "id" SERIAL NOT NULL,
     "challengeId" INTEGER NOT NULL,
     "proposalId" INTEGER NOT NULL,
-    "collaborators" JSONB NOT NULL,
     "investment" INTEGER NOT NULL,
     "milestones" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ProjectCollaborator" (
+    "id" SERIAL NOT NULL,
+    "projectId" INTEGER NOT NULL,
+    "studioId" INTEGER,
+    "corporateId" INTEGER,
+    "governmentId" INTEGER,
+    "investorId" INTEGER,
+    "role" TEXT NOT NULL,
+    "invitedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ProjectCollaborator_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -139,6 +152,12 @@ CREATE TABLE "LegalDoc" (
     CONSTRAINT "LegalDoc_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Project_challengeId_key" ON "Project"("challengeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Project_proposalId_key" ON "Project"("proposalId");
+
 -- AddForeignKey
 ALTER TABLE "Challenge" ADD CONSTRAINT "Challenge_corporateId_fkey" FOREIGN KEY ("corporateId") REFERENCES "Corporate"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -154,3 +173,23 @@ ALTER TABLE "Proposal" ADD CONSTRAINT "Proposal_challengeId_fkey" FOREIGN KEY ("
 -- AddForeignKey
 ALTER TABLE "Proposal" ADD CONSTRAINT "Proposal_studioId_fkey" FOREIGN KEY ("studioId") REFERENCES "Studio"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
+-- AddForeignKey
+ALTER TABLE "Project" ADD CONSTRAINT "Project_challengeId_fkey" FOREIGN KEY ("challengeId") REFERENCES "Challenge"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Project" ADD CONSTRAINT "Project_proposalId_fkey" FOREIGN KEY ("proposalId") REFERENCES "Proposal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectCollaborator" ADD CONSTRAINT "ProjectCollaborator_corporateId_fkey" FOREIGN KEY ("corporateId") REFERENCES "Corporate"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectCollaborator" ADD CONSTRAINT "ProjectCollaborator_governmentId_fkey" FOREIGN KEY ("governmentId") REFERENCES "Government"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectCollaborator" ADD CONSTRAINT "ProjectCollaborator_investorId_fkey" FOREIGN KEY ("investorId") REFERENCES "Investor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectCollaborator" ADD CONSTRAINT "ProjectCollaborator_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectCollaborator" ADD CONSTRAINT "ProjectCollaborator_studioId_fkey" FOREIGN KEY ("studioId") REFERENCES "Studio"("id") ON DELETE SET NULL ON UPDATE CASCADE;

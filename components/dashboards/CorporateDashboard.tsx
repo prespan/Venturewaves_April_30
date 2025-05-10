@@ -19,18 +19,20 @@ type CorporateDashboardProps = {
       title: string
       description: string
       deadline: string
+      status?: string
       proposals: {
         id: number
         title: string
         status: string
+        project?: {
+          id: number
+        }
       }[]
-    }[]
-    projects: {
-      id: number
-      investment: number
-      milestones: {
+      project?: {
         id: number
-      }[]
+        investment: number
+        milestones: any[]
+      }
     }[]
   }
 }
@@ -39,6 +41,9 @@ export default function CorporateDashboard({ corporate }: CorporateDashboardProp
   const [tab, setTab] = useState<
     'challenges' | 'proposals' | 'projects' | 'partners' | 'messages' | 'calendar'
   >('challenges')
+
+  const allProposals = corporate.challenges.flatMap(c => c.proposals || [])
+  const allProjects = corporate.challenges.map(c => c.project).filter(Boolean)
 
   return (
     <div className="p-6 space-y-6">
@@ -73,7 +78,8 @@ export default function CorporateDashboard({ corporate }: CorporateDashboardProp
             <div key={challenge.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">{challenge.title}</h2>
               <p className="text-sm text-gray-600 mb-2 line-clamp-3">{challenge.description}</p>
-              <p className="text-xs text-gray-500 mb-3">Deadline: {new Date(challenge.deadline).toLocaleDateString()}</p>
+              <p className="text-xs text-gray-500 mb-1">Deadline: {new Date(challenge.deadline).toLocaleDateString()}</p>
+              <p className="text-xs font-semibold text-orange-600 mb-3">Status: {challenge.status}</p>
               <Link href={`/challenges/${challenge.id}`} className="text-orange-600 text-sm font-medium hover:underline">Manage Challenge</Link>
             </div>
           ))}
@@ -82,10 +88,11 @@ export default function CorporateDashboard({ corporate }: CorporateDashboardProp
 
       {tab === 'proposals' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {corporate?.challenges?.flatMap((c) => c.proposals)?.map((proposal) => (
+          {allProposals.map((proposal) => (
             <div key={proposal.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">{proposal.title}</h2>
               <p className="text-sm text-gray-600 mb-1">Status: {proposal.status}</p>
+              <p className="text-xs text-gray-500 mb-3">{proposal.project ? '✅ Accepted' : 'Pending Review'}</p>
               <Link href={`/proposals/${proposal.id}`} className="text-orange-600 text-sm font-medium hover:underline">Review Proposal</Link>
             </div>
           ))}
@@ -94,11 +101,11 @@ export default function CorporateDashboard({ corporate }: CorporateDashboardProp
 
       {tab === 'projects' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {corporate?.projects?.map((project) => (
+          {allProjects.map((project: any) => (
             <div key={project.id} className="p-5 bg-white rounded-2xl shadow hover:shadow-lg transition-all">
               <h2 className="text-lg font-semibold text-gray-800 mb-1">Project #{project.id}</h2>
               <p className="text-sm text-gray-600 mb-1">Investment: ${project.investment}</p>
-              <p className="text-xs text-gray-500 mb-3">Milestones: {project.milestones?.length}</p>
+              <p className="text-xs text-gray-500 mb-3">Milestones: {project.milestones?.length || 0}</p>
               <Link href={`/projects/${project.id}`} className="text-orange-600 text-sm font-medium hover:underline">View Project</Link>
             </div>
           ))}

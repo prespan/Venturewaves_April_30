@@ -16,10 +16,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           include: {
             proposals: {
               include: {
-                project: true // include linked project for each proposal
+                project: true
               }
             },
-            project: true // include the project directly linked to the challenge
+            project: {
+              include: {
+                collaborators: true
+              }
+            }
           }
         }
       }
@@ -27,9 +31,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!corp) return res.status(404).json(null);
 
-    return res.status(200).json(corp);
+    // Optional: derive status for UI logic
+    const enrichedChallenges = corp.challenges.map((c) => ({
+      ...c,
+      status: c.project
+        ? 'CONVERTED'
+        : c.proposals.length > 0
+        ? 'PENDING'
+        : 'OPEN'
+    }));
+
+    return res.status(200).json({
+      ...corp,
+      challenges: enrichedChallenges
+    });
   } catch (error) {
     console.error('[API ERROR]', error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', detail: error instanceof Error ? error.message : String(error) });
   }
 }
