@@ -11,7 +11,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { role, name } = req.query;
 
   const validRoles = ['studio', 'corporate', 'government', 'investor', 'research'];
-
   if (typeof role !== 'string' || !validRoles.includes(role)) {
     return res.status(400).json({ error: 'Invalid or missing role' });
   }
@@ -25,25 +24,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ? await prisma.studio.findFirst({ where: { name: String(name) } })
           : await prisma.studio.findMany({ select: { id: true, name: true } });
         break;
-
       case 'corporate':
         data = name
           ? await prisma.corporate.findFirst({ where: { name: String(name) } })
           : await prisma.corporate.findMany({ select: { id: true, name: true } });
         break;
-
       case 'government':
         data = name
           ? await prisma.government.findFirst({ where: { name: String(name) } })
           : await prisma.government.findMany({ select: { id: true, name: true } });
         break;
-
       case 'investor':
         data = name
           ? await prisma.investor.findFirst({ where: { name: String(name) } })
           : await prisma.investor.findMany({ select: { id: true, name: true } });
         break;
-
       case 'research':
         data = name
           ? await prisma.researchOrganization.findFirst({ where: { name: String(name) } })
