@@ -1,3 +1,5 @@
+// schema.prisma
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,6 +19,7 @@ model Studio {
   logo        String?
   createdAt   DateTime   @default(now())
   proposals   Proposal[]
+  collaborators ProjectCollaborator[]
 }
 
 model Corporate {
@@ -30,6 +33,7 @@ model Corporate {
   logo            String?
   createdAt       DateTime    @default(now())
   challenges      Challenge[]
+  collaborators   ProjectCollaborator[]
 }
 
 model Government {
@@ -42,6 +46,7 @@ model Government {
   logo        String?
   createdAt   DateTime    @default(now())
   challenges  Challenge[]
+  collaborators ProjectCollaborator[]
 }
 
 model ResearchOrganization {
@@ -65,6 +70,7 @@ model Investor {
   notableInvestments Json
   logo               String?
   createdAt          DateTime @default(now())
+  collaborators      ProjectCollaborator[]
 }
 
 model Challenge {
@@ -86,6 +92,7 @@ model Challenge {
   government        Government?           @relation(fields: [governmentId], references: [id])
   researchOrg       ResearchOrganization? @relation(fields: [researchOrgId], references: [id])
   proposals         Proposal[]
+  project           Project?
 }
 
 model Proposal {
@@ -101,16 +108,37 @@ model Proposal {
   studioId      Int?
   challenge     Challenge @relation(fields: [challengeId], references: [id])
   Studio        Studio?   @relation(fields: [studioId], references: [id])
+  project       Project?
 }
 
 model Project {
-  id            Int      @id @default(autoincrement())
-  challengeId   Int
-  proposalId    Int
-  collaborators Json
-  investment    Int
-  milestones    Json
-  createdAt     DateTime @default(now())
+  id             Int                   @id @default(autoincrement())
+  challengeId    Int                  @unique
+  proposalId     Int                  @unique
+  investment     Int
+  milestones     Json
+  createdAt      DateTime              @default(now())
+
+  challenge      Challenge             @relation(fields: [challengeId], references: [id])
+  proposal       Proposal              @relation(fields: [proposalId], references: [id])
+  collaborators  ProjectCollaborator[]
+}
+
+model ProjectCollaborator {
+  id           Int        @id @default(autoincrement())
+  projectId    Int
+  studioId     Int?
+  corporateId  Int?
+  governmentId Int?
+  investorId   Int?
+  role         String
+  invitedAt    DateTime   @default(now())
+
+  project     Project     @relation(fields: [projectId], references: [id])
+  studio      Studio?     @relation(fields: [studioId], references: [id])
+  corporate   Corporate?  @relation(fields: [corporateId], references: [id])
+  government  Government? @relation(fields: [governmentId], references: [id])
+  investor    Investor?   @relation(fields: [investorId], references: [id])
 }
 
 model Message {
