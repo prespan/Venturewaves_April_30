@@ -24,21 +24,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ? await prisma.studio.findFirst({ where: { name: String(name) } })
           : await prisma.studio.findMany({ select: { id: true, name: true } });
         break;
+
       case 'corporate':
         data = name
           ? await prisma.corporate.findFirst({ where: { name: String(name) } })
           : await prisma.corporate.findMany({ select: { id: true, name: true } });
         break;
+
       case 'government':
         data = name
           ? await prisma.government.findFirst({ where: { name: String(name) } })
           : await prisma.government.findMany({ select: { id: true, name: true } });
         break;
+
       case 'investor':
         data = name
           ? await prisma.investor.findFirst({ where: { name: String(name) } })
           : await prisma.investor.findMany({ select: { id: true, name: true } });
         break;
+
       case 'research':
         data = name
           ? await prisma.researchOrganization.findFirst({ where: { name: String(name) } })
@@ -47,7 +51,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (!data || (Array.isArray(data) && data.length === 0)) {
-      return res.status(404).json({ error: `No ${role} organization found${name ? ` with name "${name}"` : ''}` });
+      return res.status(404).json({
+        error: `No ${role} organization found${name ? ` with name "${name}"` : ''}`
+      });
     }
 
     return res.status(200).json(data);
