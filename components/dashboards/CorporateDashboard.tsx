@@ -1,17 +1,18 @@
-'use client'
+"use client"
 
+import { useState } from "react"
 import {
   Tabs,
-  TabsContent,
   TabsList,
-  TabsTrigger
+  TabsTrigger,
+  TabsContent
 } from "@/components/ui/tabs"
 import {
   Card,
-  CardContent,
   CardHeader,
   CardTitle,
-  CardDescription
+  CardDescription,
+  CardContent
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,127 +22,122 @@ import {
   CalendarDays,
   MessageSquare
 } from "lucide-react"
-import { useState } from "react"
 
 interface CorporateDashboardProps {
-  corporate: {
-    name: string
+  organizationName?: string
+  corporate?: {
     challenges?: {
       id: number
       title: string
       description: string
       deadline: string
-      proposals?: {
-        id: number
-        title: string
-        status: string
-      }[]
     }[]
     projects?: {
       id: number
       investment: number
-      milestones?: {
-        id: number
-      }[]
+      milestones?: { id: number }[]
+    }[]
+    proposals?: {
+      id: number
+      title: string
+      status: string
     }[]
   }
 }
 
-export default function CorporateDashboard({ corporate }: CorporateDashboardProps) {
-  const [tab, setTab] = useState("challenges")
-
+export default function CorporateDashboard({ corporate, organizationName }: CorporateDashboardProps) {
   return (
     <div className="p-6 space-y-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-          <Briefcase className="w-6 h-6 text-blue-600" />
-          {corporate?.name || "Corporate"} Dashboard
+      <div className="space-y-1">
+        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          <Briefcase className="w-6 h-6 text-blue-600" /> {organizationName || "Corporate"} Dashboard
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Welcome! Manage your corporate innovation activity below.
-        </p>
+        <p className="text-sm text-gray-500">Welcome! Manage your corporate innovation activity below.</p>
       </div>
 
-      <Tabs value={tab} onValueChange={setTab} className="space-y-4">
-        <TabsList className="grid grid-cols-6 w-full">
-          <TabsTrigger value="challenges"><FileText className="w-4 h-4 mr-1" />Challenges</TabsTrigger>
-          <TabsTrigger value="proposals"><MessageSquare className="w-4 h-4 mr-1" />Proposals</TabsTrigger>
-          <TabsTrigger value="projects"><Briefcase className="w-4 h-4 mr-1" />Projects</TabsTrigger>
-          <TabsTrigger value="partners"><Users className="w-4 h-4 mr-1" />Partners</TabsTrigger>
-          <TabsTrigger value="messages"><MessageSquare className="w-4 h-4 mr-1" />Messages</TabsTrigger>
-          <TabsTrigger value="calendar"><CalendarDays className="w-4 h-4 mr-1" />Calendar</TabsTrigger>
+      <Tabs defaultValue="challenges" className="w-full">
+        <TabsList className="grid grid-cols-6 w-full mb-4">
+          <TabsTrigger value="challenges"><FileText className="inline-block w-4 h-4 mr-1" /> Challenges</TabsTrigger>
+          <TabsTrigger value="proposals"><MessageSquare className="inline-block w-4 h-4 mr-1" /> Proposals</TabsTrigger>
+          <TabsTrigger value="projects"><Briefcase className="inline-block w-4 h-4 mr-1" /> Projects</TabsTrigger>
+          <TabsTrigger value="partners"><Users className="inline-block w-4 h-4 mr-1" /> Partners</TabsTrigger>
+          <TabsTrigger value="messages"><MessageSquare className="inline-block w-4 h-4 mr-1" /> Messages</TabsTrigger>
+          <TabsTrigger value="calendar"><CalendarDays className="inline-block w-4 h-4 mr-1" /> Calendar</TabsTrigger>
         </TabsList>
 
-        {/* Challenges */}
         <TabsContent value="challenges">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {corporate?.challenges?.length ? corporate.challenges.map(challenge => (
-              <Card key={challenge.id}>
-                <CardHeader>
-                  <CardTitle>{challenge.title}</CardTitle>
-                  <CardDescription className="line-clamp-2">{challenge.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground mb-2">Deadline: {new Date(challenge.deadline).toLocaleDateString()}</p>
-                  <Button size="sm" variant="outline">View More</Button>
-                </CardContent>
-              </Card>
-            )) : (
-              <p className="text-sm text-muted-foreground">No challenges yet.</p>
+            {corporate?.challenges?.length ? (
+              corporate.challenges.map((challenge) => (
+                <Card key={challenge.id}>
+                  <CardHeader>
+                    <CardTitle>{challenge.title}</CardTitle>
+                    <CardDescription>{challenge.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-500 mb-2">Deadline: {new Date(challenge.deadline).toLocaleDateString()}</p>
+                    <Button variant="outline" size="sm">Manage</Button>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">No challenges yet.</p>
             )}
           </div>
         </TabsContent>
 
-        {/* Proposals */}
         <TabsContent value="proposals">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {corporate?.challenges?.flatMap(c => c.proposals || [])?.length ? corporate.challenges.flatMap(c => c.proposals || []).map(proposal => (
-              <Card key={proposal.id}>
-                <CardHeader>
-                  <CardTitle>{proposal.title}</CardTitle>
-                  <CardDescription>Status: {proposal.status}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button size="sm" variant="outline">Review</Button>
-                </CardContent>
-              </Card>
-            )) : (
-              <p className="text-sm text-muted-foreground">No incoming proposals.</p>
+            {corporate?.proposals?.length ? (
+              corporate.proposals.map((proposal) => (
+                <Card key={proposal.id}>
+                  <CardHeader>
+                    <CardTitle>{proposal.title}</CardTitle>
+                    <CardDescription>Status: {proposal.status}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="outline" size="sm">Review</Button>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">No proposals yet.</p>
             )}
           </div>
         </TabsContent>
 
-        {/* Projects */}
         <TabsContent value="projects">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {corporate?.projects?.length ? corporate.projects.map(project => (
-              <Card key={project.id}>
-                <CardHeader>
-                  <CardTitle>Project #{project.id}</CardTitle>
-                  <CardDescription>Investment: ${project.investment}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground mb-2">Milestones: {project.milestones?.length || 0}</p>
-                  <Button size="sm" variant="outline">View Details</Button>
-                </CardContent>
-              </Card>
-            )) : (
-              <p className="text-sm text-muted-foreground">No projects available.</p>
+            {corporate?.projects?.length ? (
+              corporate.projects.map((project) => (
+                <Card key={project.id}>
+                  <CardHeader>
+                    <CardTitle>Project #{project.id}</CardTitle>
+                    <CardDescription>
+                      Investment: ${project.investment} <br /> Milestones: {project.milestones?.length || 0}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="outline" size="sm">View</Button>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">No projects yet.</p>
             )}
           </div>
         </TabsContent>
 
-        {/* Coming Soon */}
         <TabsContent value="partners">
-          <Card><CardContent>🤝 Partner Matching coming soon</CardContent></Card>
+          <p className="text-sm text-gray-500">🤝 Partner Matching coming soon...</p>
         </TabsContent>
 
         <TabsContent value="messages">
-          <Card><CardContent>💬 Messaging feature coming soon</CardContent></Card>
+          <p className="text-sm text-gray-500">💬 Messaging coming soon...</p>
         </TabsContent>
 
         <TabsContent value="calendar">
-          <Card><CardContent>📅 Corporate Calendar coming soon</CardContent></Card>
+          <p className="text-sm text-gray-500">📅 Calendar integration coming soon...</p>
         </TabsContent>
       </Tabs>
     </div>
