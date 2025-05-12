@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "challengeId": 11,
+    "proposalId": 1,
+    "investment": 500000,
+    "milestones": [
+      { "name": "Phase 1: Pilot Deployment", "due": "2025-08-15" },
+      { "name": "Phase 2: Grid Optimization", "due": "2025-10-15" }
+    ],
+    "createdAt": "2025-05-12T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "challengeId": 12,
+    "proposalId": 3,
+    "investment": 700000,
+    "milestones": [
+      { "name": "Phase 1: ML Integration", "due": "2025-08-20" },
+      { "name": "Phase 2: Maintenance Optimization", "due": "2025-10-20" }
+    ],
+    "createdAt": "2025-05-12T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "challengeId": 13,
+    "proposalId": 5,
+    "investment": 900000,
+    "milestones": [
+      { "name": "Phase 1: IoT Setup", "due": "2025-08-25" },
+      { "name": "Phase 2: Building Optimization", "due": "2025-10-25" }
+    ],
+    "createdAt": "2025-05-12T00:00:00Z"
+  }
+]

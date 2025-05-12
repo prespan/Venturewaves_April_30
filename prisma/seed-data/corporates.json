@@ -1,92 +1,92 @@
 [
   {
     "name": "Siemens",
-    "url": "https://www.siemens.com",
-    "country": "Germany",
+    "website": "https://www.siemens.com",
+    "address": "Germany",
     "industryTags": ["Mobility", "Energy"],
     "description": "A global leader in electrification, automation, and digitalization.",
-    "challenges": ["Smart Grid Optimization", "Sustainable Urban Mobility"],
+    "notableProducts": ["Smart Grid Optimization", "Sustainable Urban Mobility"],
     "logo": "/logos/siemens.png"
   },
   {
     "name": "Unilever",
-    "url": "https://www.unilever.com",
-    "country": "UK",
+    "website": "https://www.unilever.com",
+    "address": "UK",
     "industryTags": ["Consumer Goods", "Sustainability"],
     "description": "Driven by purpose, creating a better future every day.",
-    "challenges": ["Plastic-Free Packaging", "Waterless Products"],
+    "notableProducts": ["Plastic-Free Packaging", "Waterless Products"],
     "logo": "/logos/unilever.png"
   },
   {
     "name": "Samsung Next",
-    "url": "https://www.samsungnext.com",
-    "country": "South Korea",
+    "website": "https://www.samsungnext.com",
+    "address": "South Korea",
     "industryTags": ["AI", "Consumer Electronics"],
     "description": "Investing in and building frontier tech.",
-    "challenges": ["AI-Driven Smart Devices", "Privacy-Preserving Tech"],
+    "notableProducts": ["AI-Driven Smart Devices", "Privacy-Preserving Tech"],
     "logo": "/logos/samsung.png"
   },
   {
     "name": "Coca-Cola Company",
-    "url": "https://www.coca-colacompany.com",
-    "country": "USA",
+    "website": "https://www.coca-colacompany.com",
+    "address": "USA",
     "industryTags": ["Beverage", "Packaging"],
     "description": "Creating sustainable packaging solutions.",
-    "challenges": ["Closed-loop Bottle Recycling", "Low Sugar Innovation"],
+    "notableProducts": ["Closed-loop Bottle Recycling", "Low Sugar Innovation"],
     "logo": "/logos/coca-cola.png"
   },
   {
     "name": "Bosch",
-    "url": "https://www.bosch.com",
-    "country": "Germany",
+    "website": "https://www.bosch.com",
+    "address": "Germany",
     "industryTags": ["IoT", "Mobility"],
     "description": "A leading provider of technology and services.",
-    "challenges": ["Smart Home Automation", "Vehicle-to-Everything Systems"],
+    "notableProducts": ["Smart Home Automation", "Vehicle-to-Everything Systems"],
     "logo": "/logos/bosch.png"
   },
   {
     "name": "Nestlé",
-    "url": "https://www.nestle.com",
-    "country": "Switzerland",
+    "website": "https://www.nestle.com",
+    "address": "Switzerland",
     "industryTags": ["Food", "Health"],
     "description": "Enhancing quality of life with nutrition, health and wellness.",
-    "challenges": ["Sustainable Ingredient Sourcing", "Zero Waste Factories"],
+    "notableProducts": ["Sustainable Ingredient Sourcing", "Zero Waste Factories"],
     "logo": "/logos/nestle.png"
   },
   {
     "name": "GE Healthcare",
-    "url": "https://www.gehealthcare.com",
-    "country": "USA",
+    "website": "https://www.gehealthcare.com",
+    "address": "USA",
     "industryTags": ["Healthcare", "Imaging"],
     "description": "Leading medical technology and digital solutions innovator.",
-    "challenges": ["Remote Diagnostic Devices", "AI Imaging Analysis"],
+    "notableProducts": ["Remote Diagnostic Devices", "AI Imaging Analysis"],
     "logo": "/logos/ge.png"
   },
   {
     "name": "Toyota Mobility Foundation",
-    "url": "https://www.toyotamobilityfoundation.org",
-    "country": "Japan",
+    "website": "https://www.toyotamobilityfoundation.org",
+    "address": "Japan",
     "industryTags": ["Mobility", "Accessibility"],
     "description": "Solving mobility challenges around the world.",
-    "challenges": ["Autonomous Shuttle Platforms", "Mobility for Disabled"],
+    "notableProducts": ["Autonomous Shuttle Platforms", "Mobility for Disabled"],
     "logo": "/logos/toyota.png"
   },
   {
     "name": "Intel",
-    "url": "https://www.intel.com",
-    "country": "USA",
+    "website": "https://www.intel.com",
+    "address": "USA",
     "industryTags": ["AI", "Semiconductors"],
     "description": "Shaping the future of technology with chips and AI.",
-    "challenges": ["Low-power AI Chips", "Federated Learning on Edge"],
+    "notableProducts": ["Low-power AI Chips", "Federated Learning on Edge"],
     "logo": "/logos/intel.png"
   },
   {
     "name": "Philips",
-    "url": "https://www.philips.com",
-    "country": "Netherlands",
+    "website": "https://www.philips.com",
+    "address": "Netherlands",
     "industryTags": ["HealthTech", "Consumer"],
     "description": "Improving people’s health through meaningful innovation.",
-    "challenges": ["Home Healthcare Monitoring", "Connected Sleep Devices"],
+    "notableProducts": ["Home Healthcare Monitoring", "Connected Sleep Devices"],
     "logo": "/logos/philips.png"
   }
 ]

@@ -1,7 +1,7 @@
 [
   {
     "name": "UK Government",
-    "region": "United Kingdom",
+    "address": "United Kingdom",
     "website": "https://www.gov.uk",
     "focusAreas": ["Innovation Policy", "Net Zero"],
     "description": "Driving innovation, sustainability, and economic growth.",
@@ -9,7 +9,7 @@
   },
   {
     "name": "City of London",
-    "region": "UK",
+    "address": "UK",
     "website": "https://www.london.gov.uk",
     "focusAreas": ["Urban Tech", "Green Infrastructure"],
     "description": "Making London a smart and sustainable global city.",
@@ -17,7 +17,7 @@
   },
   {
     "name": "Tokyo Metropolitan Government",
-    "region": "Japan",
+    "address": "Japan",
     "website": "https://www.metro.tokyo.lg.jp",
     "focusAreas": ["Smart City", "Resilience"],
     "description": "Promoting innovation and future-focused city services.",
@@ -25,7 +25,7 @@
   },
   {
     "name": "City of Nice",
-    "region": "France",
+    "address": "France",
     "website": "https://www.nice.fr",
     "focusAreas": ["Climate Adaptation", "Digital Economy"],
     "description": "A Mediterranean leader in climate-smart urbanism.",
@@ -33,7 +33,7 @@
   },
   {
     "name": "Abu Dhabi Government",
-    "region": "UAE",
+    "address": "UAE",
     "website": "https://www.abudhabi.ae",
     "focusAreas": ["Smart Cities", "Clean Energy"],
     "description": "Investing in next-gen infrastructure and innovation.",
@@ -41,7 +41,7 @@
   },
   {
     "name": "Principality of Monaco",
-    "region": "Monaco",
+    "address": "Monaco",
     "website": "https://en.gouv.mc",
     "focusAreas": ["Sustainability", "Maritime Tech"],
     "description": "Pioneering eco-innovation and digital transformation.",
@@ -49,7 +49,7 @@
   },
   {
     "name": "City of Amsterdam",
-    "region": "Netherlands",
+    "address": "Netherlands",
     "website": "https://www.amsterdam.nl",
     "focusAreas": ["Circular Economy", "Urban Innovation"],
     "description": "A global hub for open innovation and startups.",
@@ -57,7 +57,7 @@
   },
   {
     "name": "San Francisco County",
-    "region": "USA",
+    "address": "USA",
     "website": "https://sf.gov",
     "focusAreas": ["Mobility", "Digital Inclusion"],
     "description": "Championing inclusive and tech-driven policies.",
@@ -65,7 +65,7 @@
   },
   {
     "name": "Singapore Government",
-    "region": "Singapore",
+    "address": "Singapore",
     "website": "https://www.gov.sg",
     "focusAreas": ["Smart Nation", "Resilient Infrastructure"],
     "description": "Global leader in smart and sustainable governance.",
@@ -73,7 +73,7 @@
   },
   {
     "name": "City of Helsinki",
-    "region": "Finland",
+    "address": "Finland",
     "website": "https://www.hel.fi",
     "focusAreas": ["AI in Governance", "Green Tech"],
     "description": "At the forefront of digital public services.",

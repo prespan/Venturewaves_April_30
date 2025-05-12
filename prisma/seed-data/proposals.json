@@ -1,152 +1,112 @@
 [
   {
-    "challengeId": 1,
-    "title": "GreenFleet Optimization AI",
-    "description": "Real-time analytics and route-adjustment engine for renewable-powered logistics fleets.",
-    "actionPlan": [
-      { "step": "Build MVP", "date": "2025-05-04" },
-      { "step": "Beta test", "date": "2025-05-19" },
-      { "step": "Integrate ERP and dashboards", "date": "2025-06-03" },
-      { "step": "Launch in Amsterdam", "date": "2025-06-18" },
-      { "step": "Publish results", "date": "2025-07-03" }
-    ],
+    "id": 1,
+    "challengeId": 11,
+    "title": "GridIQ by Antler",
+    "description": "AI-based predictive and optimization algorithms for smart grids.",
+    "actionPlan": { "steps": ["Data integration", "Predictive modeling", "Optimization deployment"] },
     "submittedBy": "Antler",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 1
   },
   {
-    "challengeId": 2,
-    "title": "Aquacell – Smart Leak Detection",
-    "description": "AI and acoustic sensor solution for detecting micro-leaks in city water systems.",
-    "actionPlan": [
-      { "step": "Develop sensor and AI model", "date": "2025-05-05" },
-      { "step": "Pilot test in London", "date": "2025-05-25" },
-      { "step": "Expand to 3 cities", "date": "2025-06-15" },
-      { "step": "Deploy IoT devices", "date": "2025-07-01" },
-      { "step": "Dashboard rollout", "date": "2025-07-18" }
-    ],
+    "id": 2,
+    "challengeId": 11,
+    "title": "SmartGridX by Founders Factory",
+    "description": "Blockchain-secured grid transactions for energy trading.",
+    "actionPlan": { "steps": ["Blockchain integration", "Smart contracts", "Pilot in selected cities"] },
     "submittedBy": "Founders Factory",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 2
   },
   {
-    "challengeId": 3,
-    "title": "ZeroWaste Ingredient Engine",
-    "description": "AI-powered platform connecting food producers with upcycled ingredient buyers.",
-    "actionPlan": [
-      { "step": "Integrate supplier APIs", "date": "2025-05-07" },
-      { "step": "Pilot with factories", "date": "2025-05-20" },
-      { "step": "Launch marketplace beta", "date": "2025-06-10" },
-      { "step": "Issue ESG dashboards", "date": "2025-06-25" },
-      { "step": "Expand to cosmetics", "date": "2025-07-12" }
-    ],
-    "submittedBy": "eFounders",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
-  },
-  {
-    "challengeId": 4,
-    "title": "VisionTrack – AI Diagnostics",
-    "description": "AI platform for rural clinics to analyze diagnostic images and provide instant feedback.",
-    "actionPlan": [
-      { "step": "Train image models", "date": "2025-05-10" },
-      { "step": "Deploy to clinics", "date": "2025-05-30" },
-      { "step": "Iterate UI from feedback", "date": "2025-06-15" },
-      { "step": "Publish results", "date": "2025-07-01" },
-      { "step": "Scale in Asia/Africa", "date": "2025-07-20" }
-    ],
-    "submittedBy": "Zinc VC",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
-  },
-  {
-    "challengeId": 5,
-    "title": "NetZero Smart School Grid",
-    "description": "Decentralized school microgrids using solar and gamified energy analytics.",
-    "actionPlan": [
-      { "step": "Feasibility study", "date": "2025-05-06" },
-      { "step": "Install hardware", "date": "2025-05-27" },
-      { "step": "Build dashboards", "date": "2025-06-12" },
-      { "step": "Start energy sell-back", "date": "2025-06-30" },
-      { "step": "Expand to 25 schools", "date": "2025-07-18" }
-    ],
-    "submittedBy": "High Alpha",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
-  },
-  {
-    "challengeId": 6,
-    "title": "EcoTrack: Circular Packaging Registry",
-    "description": "Blockchain registry to track and certify reusable packaging across supply chains.",
-    "actionPlan": [
-      { "step": "Design blockchain API", "date": "2025-05-10" },
-      { "step": "Onboard FMCG clients", "date": "2025-05-25" },
-      { "step": "Launch QR scanner app", "date": "2025-06-10" },
-      { "step": "Publish impact report", "date": "2025-06-30" },
-      { "step": "Begin certification", "date": "2025-07-15" }
-    ],
+    "id": 3,
+    "challengeId": 12,
+    "title": "MaintainPro by Mach49",
+    "description": "ML models for predictive maintenance in industrial equipment.",
+    "actionPlan": { "steps": ["Sensor integration", "Model training", "Deployment & Testing"] },
     "submittedBy": "Mach49",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 3
   },
   {
-    "challengeId": 7,
-    "title": "MindMesh – Cognitive Health for All",
-    "description": "Cognitive screening and tracking platform for rural elderly communities.",
-    "actionPlan": [
-      { "step": "Validate tools", "date": "2025-05-06" },
-      { "step": "Pilot in 3 communities", "date": "2025-05-20" },
-      { "step": "Add compliance features", "date": "2025-06-08" },
-      { "step": "Build caregiver app", "date": "2025-06-25" },
-      { "step": "Scale to 50 locations", "date": "2025-07-14" }
-    ],
-    "submittedBy": "Idealab",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
+    "id": 4,
+    "challengeId": 12,
+    "title": "EquipPredict by eFounders",
+    "description": "Digital twin solution for industrial equipment lifecycle management.",
+    "actionPlan": { "steps": ["Digital twin modeling", "Predictive analytics", "Maintenance workflows"] },
+    "submittedBy": "eFounders",
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 4
   },
   {
-    "challengeId": 8,
-    "title": "AgroSense: Smart Soil Insights",
-    "description": "AI soil monitoring and guidance for smallholder farmers in Africa and Asia.",
-    "actionPlan": [
-      { "step": "Assemble sensor kits", "date": "2025-05-05" },
-      { "step": "Train field agents", "date": "2025-05-18" },
-      { "step": "Test SMS dashboard", "date": "2025-06-01" },
-      { "step": "Refine AI model", "date": "2025-06-20" },
-      { "step": "Expand reach", "date": "2025-07-10" }
-    ],
+    "id": 5,
+    "challengeId": 13,
+    "title": "EcoBuild by Rocket Internet",
+    "description": "Automated energy optimization in commercial buildings.",
+    "actionPlan": { "steps": ["IoT deployment", "Analytics dashboard", "Optimization rollout"] },
     "submittedBy": "Rocket Internet",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 5
   },
   {
-    "challengeId": 9,
-    "title": "FinScope: Inclusive Credit Builder",
-    "description": "Alternative credit scoring platform for underserved populations using mobile data.",
-    "actionPlan": [
-      { "step": "Design algorithm", "date": "2025-05-08" },
-      { "step": "Partner with banks", "date": "2025-05-22" },
-      { "step": "Launch beta", "date": "2025-06-05" },
-      { "step": "Create user modules", "date": "2025-06-22" },
-      { "step": "Scale across LATAM", "date": "2025-07-12" }
-    ],
+    "id": 6,
+    "challengeId": 13,
+    "title": "GreenSpaces by Betaworks",
+    "description": "Mobile-first app for employee energy consumption gamification.",
+    "actionPlan": { "steps": ["Mobile app development", "Gamification mechanics", "Employee engagement campaigns"] },
     "submittedBy": "Betaworks",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 6
   },
   {
-    "challengeId": 10,
-    "title": "NeuroBuild – Adaptive Learning Toolkit",
-    "description": "Adaptive learning engine for neurodiverse students with teacher dashboards.",
-    "actionPlan": [
-      { "step": "Partner with schools", "date": "2025-05-09" },
-      { "step": "Analyze data", "date": "2025-05-28" },
-      { "step": "Build dashboards", "date": "2025-06-12" },
-      { "step": "Test modules", "date": "2025-06-30" },
-      { "step": "Publish findings", "date": "2025-07-16" }
-    ],
+    "id": 7,
+    "challengeId": 11,
+    "title": "AI GridSense by High Alpha",
+    "description": "Autonomous energy grid balancing using AI agents.",
+    "actionPlan": { "steps": ["AI agent design", "Integration with grid systems", "Simulation & Pilot"] },
+    "submittedBy": "High Alpha",
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 7
+  },
+  {
+    "id": 8,
+    "challengeId": 12,
+    "title": "PredictEase by Idealab",
+    "description": "Predictive analytics for manufacturing equipment via cloud dashboard.",
+    "actionPlan": { "steps": ["Cloud dashboard", "Data connectors", "Predictive engine"] },
+    "submittedBy": "Idealab",
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 8
+  },
+  {
+    "id": 9,
+    "challengeId": 13,
+    "title": "EcoOptim by Zinc VC",
+    "description": "SaaS for real-time energy optimization recommendations for building managers.",
+    "actionPlan": { "steps": ["SaaS platform", "Energy recommendations engine", "User training modules"] },
     "submittedBy": "Zinc VC",
-    "submittedAt": "2025-04-19T00:00:00.000Z",
-    "status": "PENDING"
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 9
+  },
+  {
+    "id": 10,
+    "challengeId": 11,
+    "title": "SmartGrid AI by BCG Digital Ventures",
+    "description": "AI-based load balancing and demand forecasting tool for smart grids.",
+    "actionPlan": { "steps": ["Data ingestion layer", "Forecasting algorithms", "UI for utilities"] },
+    "submittedBy": "BCG Digital Ventures",
+    "submittedAt": "2025-05-12T00:00:00Z",
+    "status": "PENDING",
+    "studioId": 10
   }
 ]

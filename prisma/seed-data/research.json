@@ -2,40 +2,40 @@
   {
     "name": "ARMC (Applied Research & Innovation Centre)",
     "website": "https://armc.org",
-    "country": "UK",
-    "domains": ["HealthTech", "Sustainable Materials"],
+    "address": "UK",
+    "focusDomains": ["HealthTech", "Sustainable Materials"],
     "description": "Driving applied research and prototyping innovation.",
     "logo": "/logos/armc.png"
   },
   {
     "name": "CPI (Centre for Process Innovation)",
     "website": "https://www.uk-cpi.com",
-    "country": "UK",
-    "domains": ["Advanced Manufacturing", "Bioeconomy"],
+    "address": "UK",
+    "focusDomains": ["Advanced Manufacturing", "Bioeconomy"],
     "description": "Helping companies develop, prove and scale innovations.",
     "logo": "/logos/cpi.png"
   },
   {
     "name": "Tecnalia",
     "website": "https://www.tecnalia.com",
-    "country": "Spain",
-    "domains": ["Smart Cities", "Industry 4.0"],
+    "address": "Spain",
+    "focusDomains": ["Smart Cities", "Industry 4.0"],
     "description": "Leading private applied research centre in Spain.",
     "logo": "/logos/tecnalia.png"
   },
   {
     "name": "Fraunhofer Society",
     "website": "https://www.fraunhofer.de",
-    "country": "Germany",
-    "domains": ["Engineering", "Energy Systems"],
+    "address": "Germany",
+    "focusDomains": ["Engineering", "Energy Systems"],
     "description": "Europe’s largest application-oriented research organization.",
     "logo": "/logos/fraunhofer.png"
   },
   {
     "name": "IMEC",
     "website": "https://www.imec-int.com",
-    "country": "Belgium",
-    "domains": ["Nanoelectronics", "AI Hardware"],
+    "address": "Belgium",
+    "focusDomains": ["Nanoelectronics", "AI Hardware"],
     "description": "Pioneering nanoelectronics R&D hub.",
     "logo": "/logos/imec.png"
   }
