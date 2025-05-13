@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "seed": "node --loader ts-node/esm prisma/seed.mts",
-    "lint": "next lint"
-  },
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint",
+  "seed": "node --loader ts-node/esm prisma/seed.mts",
+  "clean": "rm -rf .next node_modules/.cache"
+},
   "prisma": {
     "seed": "node --loader ts-node/esm prisma/seed.mts"
   },
