@@ -1,8 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/register/corporate": "pages/register/corporate.js",
-  "/dashboard/corporate": "pages/dashboard/corporate.js",
-  "/": "pages/index.js"
-}
+{"/_app":"pages/_app.js","/_error":"pages/_error.js","/api/corporates/[id]/challenges":"pages/api/corporates/[id]/challenges.js","/api/corporates/[id]/projects":"pages/api/corporates/[id]/projects.js","/api/corporates/[id]/proposals":"pages/api/corporates/[id]/proposals.js","/api/messaging/send":"pages/api/messaging/send.js","/api/messaging/threads":"pages/api/messaging/threads.js","/api/register/[role]":"pages/api/register/[role].js","/dashboard/admin":"pages/dashboard/admin.html","/dashboard/corporate":"pages/dashboard/corporate.html","/dashboard/government":"pages/dashboard/government.html","/dashboard/investor":"pages/dashboard/investor.html","/dashboard/research":"pages/dashboard/research.html","/dashboard/studio":"pages/dashboard/studio.html","/":"pages/index.html","/register/corporate":"pages/register/corporate.html","/register/government":"pages/register/government.html","/register/investor":"pages/register/investor.html","/register/research":"pages/register/research.html","/register/studio":"pages/register/studio.html","/_document":"pages/_document.js","/404":"pages/404.html"}
