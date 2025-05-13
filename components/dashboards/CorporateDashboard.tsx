@@ -1,51 +1,35 @@
 "use client"
 
-import { useState } from "react"
+import useSWR from "swr";
+import { useState } from "react";
 import {
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent
-} from "@/components/ui/tabs"
+} from "@/components/ui/tabs";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import {
-  Briefcase,
-  FileText,
-  Users,
-  CalendarDays,
-  MessageSquare
-} from "lucide-react"
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Briefcase, FileText, Users, CalendarDays, MessageSquare } from "lucide-react";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 interface CorporateDashboardProps {
-  organizationName?: string
-  corporate?: {
-    challenges?: {
-      id: number
-      title: string
-      description: string
-      deadline: string
-    }[]
-    projects?: {
-      id: number
-      investment: number
-      milestones?: { id: number }[]
-    }[]
-    proposals?: {
-      id: number
-      title: string
-      status: string
-    }[]
-  }
+  organizationName?: string;
+  corporateId: number;
 }
 
-export default function CorporateDashboard({ corporate, organizationName }: CorporateDashboardProps) {
+export default function CorporateDashboard({ corporateId, organizationName }: CorporateDashboardProps) {
+  const { data: challenges, error: challengesError } = useSWR(`/api/corporates/${corporateId}/challenges`, fetcher);
+  const { data: proposals, error: proposalsError } = useSWR(`/api/corporates/${corporateId}/proposals`, fetcher);
+  const { data: projects, error: projectsError } = useSWR(`/api/corporates/${corporateId}/projects`, fetcher);
+
   return (
     <div className="p-6 space-y-6">
       <div className="space-y-1">
@@ -67,8 +51,8 @@ export default function CorporateDashboard({ corporate, organizationName }: Corp
 
         <TabsContent value="challenges">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {corporate?.challenges?.length ? (
-              corporate.challenges.map((challenge) => (
+            {challenges?.length ? (
+              challenges.map((challenge: any) => (
                 <Card key={challenge.id}>
                   <CardHeader>
                     <CardTitle>{challenge.title}</CardTitle>
@@ -88,12 +72,12 @@ export default function CorporateDashboard({ corporate, organizationName }: Corp
 
         <TabsContent value="proposals">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {corporate?.proposals?.length ? (
-              corporate.proposals.map((proposal) => (
+            {proposals?.length ? (
+              proposals.map((proposal: any) => (
                 <Card key={proposal.id}>
                   <CardHeader>
                     <CardTitle>{proposal.title}</CardTitle>
-                    <CardDescription>Status: {proposal.status}</CardDescription>
+                    <CardDescription>Challenge: {proposal.challenge?.title || "N/A"}<br />Status: {proposal.status}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Button variant="outline" size="sm">Review</Button>
@@ -108,13 +92,14 @@ export default function CorporateDashboard({ corporate, organizationName }: Corp
 
         <TabsContent value="projects">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {corporate?.projects?.length ? (
-              corporate.projects.map((project) => (
+            {projects?.length ? (
+              projects.map((project: any) => (
                 <Card key={project.id}>
                   <CardHeader>
                     <CardTitle>Project #{project.id}</CardTitle>
                     <CardDescription>
-                      Investment: ${project.investment} <br /> Milestones: {project.milestones?.length || 0}
+                      Investment: ${project.investment}<br />
+                      Milestones: {project.milestones?.length || 0}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -141,5 +126,5 @@ export default function CorporateDashboard({ corporate, organizationName }: Corp
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
