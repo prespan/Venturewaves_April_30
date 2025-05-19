@@ -1,7 +1,18 @@
 import useSWR from 'swr';
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+type Challenge = {
+  id: number;
+  title: string;
+  description: string;
+  // ... other fields
+};
 
 export function useCorporateChallenges(corporateId: number) {
-  return useSWR(corporateId ? `/api/corporates/${corporateId}/challenges` : null, fetcher);
+  return useSWR<Challenge[]>(
+    corporateId ? `/api/corporates/${corporateId}/challenges` : null,
+    (url: string) =>
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => data.challenges)
+  );
 }

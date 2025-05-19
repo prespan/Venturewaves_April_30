@@ -1,1 +1,39 @@
-self.__BUILD_MANIFEST={polyfillFiles:["static/chunks/polyfills-42372ed130431b0a.js"],devFiles:[],ampDevFiles:[],lowPriorityFiles:[],rootMainFiles:[],pages:{"/":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/pages/index-2118d4ea26a10a37.js"],"/_app":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/css/b5dcc88a0ad1e831.css","static/chunks/pages/_app-30ddc0a346a0e165.js"],"/_error":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/pages/_error-7a92967bea80186d.js"],"/dashboard/admin":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/411-3270af315d11bfc3.js","static/chunks/pages/dashboard/admin-a751391a3053995c.js"],"/dashboard/corporate":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/411-3270af315d11bfc3.js","static/chunks/161-4ed14b6d6c7de8e5.js","static/chunks/pages/dashboard/corporate-c1ee3e16e04bd78a.js"],"/dashboard/government":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/411-3270af315d11bfc3.js","static/chunks/pages/dashboard/government-0632a3ebaa5dde0b.js"],"/dashboard/investor":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/411-3270af315d11bfc3.js","static/chunks/pages/dashboard/investor-306f723f8f6c4177.js"],"/dashboard/research":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/411-3270af315d11bfc3.js","static/chunks/pages/dashboard/research-de2e3f2971128cbd.js"],"/dashboard/studio":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/411-3270af315d11bfc3.js","static/chunks/pages/dashboard/studio-82f3a1bda2219620.js"],"/register/corporate":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/pages/register/corporate-692df32f9247607b.js"],"/register/government":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/pages/register/government-f55bc39dcea6e4c9.js"],"/register/investor":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/pages/register/investor-3b555c71b9618fb1.js"],"/register/research":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/pages/register/research-4da5f67e5594c651.js"],"/register/studio":["static/chunks/webpack-0b5d8249fb15f5f3.js","static/chunks/framework-49c6cecf1f6d5795.js","static/chunks/main-4480e7d19afaa09f.js","static/chunks/pages/register/studio-7c2870e431e1744b.js"]},ampFirstPages:[]},self.__BUILD_MANIFEST.lowPriorityFiles=["/static/"+process.env.__NEXT_BUILD_ID+"/_buildManifest.js",,"/static/"+process.env.__NEXT_BUILD_ID+"/_ssgManifest.js"];
+self.__BUILD_MANIFEST = {
+  "polyfillFiles": [
+    "static/chunks/polyfills.js"
+  ],
+  "devFiles": [
+    "static/chunks/react-refresh.js"
+  ],
+  "ampDevFiles": [],
+  "lowPriorityFiles": [],
+  "rootMainFiles": [],
+  "pages": {
+    "/_app": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/_app.js"
+    ],
+    "/_error": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/_error.js"
+    ],
+    "/dashboard/corporate": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/dashboard/corporate.js"
+    ],
+    "/register/corporate": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/register/corporate.js"
+    ]
+  },
+  "ampFirstPages": []
+};
+self.__BUILD_MANIFEST.lowPriorityFiles = [
+"/static/" + process.env.__NEXT_BUILD_ID + "/_buildManifest.js",
+,"/static/" + process.env.__NEXT_BUILD_ID + "/_ssgManifest.js",
+
+];
