@@ -25,7 +25,8 @@ import {
 import { useCorporateChallenges } from "@/hooks/useCorporateChallenges";
 import { useCorporateProposals } from "@/hooks/useCorporateProposals";
 import { useCorporateProjects } from "@/hooks/useCorporateProjects";
-import useCorporatePartners from "@/hooks/useCorporatePartners";
+import { useCorporatePartners } from "@/hooks/useCorporatePartners";
+;
 
 interface CorporateDashboardProps {
   organizationName?: string;
