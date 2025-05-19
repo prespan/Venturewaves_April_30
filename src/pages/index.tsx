@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const logos = [
   'catapult.png',
@@ -15,34 +15,37 @@ const logos = [
   'byld.png',
   'coplex.png',
   'boomerang.png',
-]
+];
 
 export default function Home() {
-  const router = useRouter()
-  const [role, setRole] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [role, setRole] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleStart = async () => {
-    if (!role) return
-    setLoading(true)
+    if (!role) return;
+    setLoading(true);
 
     try {
-      const res = await fetch(`/api/register/${role}`)
-      const org = await res.json()
+      const res = await fetch(`/api/register/${role}`);
+      const data = await res.json();
+
+      // Support both single object and array response
+      const org = Array.isArray(data) ? data[0] : data;
 
       if (!res.ok || !org?.name) {
-        alert(`No ${role} organization found`)
-        return
+        alert(`No ${role} organization found`);
+        return;
       }
 
-      router.push(`/register/${role}?name=${encodeURIComponent(org.name)}`)
+      router.push(`/register/${role}?name=${encodeURIComponent(org.name)}`);
     } catch (err) {
-      console.error(err)
-      alert('Failed to fetch organization')
+      console.error(err);
+      alert('Failed to fetch organization');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col items-center justify-center px-6 py-16 space-y-16">
@@ -91,5 +94,5 @@ export default function Home() {
         ))}
       </div>
     </div>
-  )
+  );
 }
