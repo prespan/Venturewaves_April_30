@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 const logos = [
   'catapult.png',
@@ -15,39 +15,50 @@ const logos = [
   'byld.png',
   'coplex.png',
   'boomerang.png',
-];
+]
 
 export default function Home() {
-  const router = useRouter();
-  const [role, setRole] = useState('');
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const [role, setRole] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleStart = async () => {
-    if (!role) return;
-    setLoading(true);
+    if (!role) return
+    setLoading(true)
 
     try {
-      const res = await fetch(`/api/register/${role}`);
-      const data = await res.json();
+      const res = await fetch(`/api/register/${role}`)
+      const orgs = await res.json()
 
-      if (!res.ok || !Array.isArray(data) || data.length === 0 || !data[0]?.name) {
-        alert(`No ${role} organization found`);
-        return;
+      console.log('Fetched data from API:', orgs)
+
+      if (!res.ok) {
+        alert(`Server error for role ${role}`)
+        return
       }
 
-      const firstOrg = data[0];
-      router.push(`/register/${role}?name=${encodeURIComponent(firstOrg.name)}`);
+      if (!Array.isArray(orgs) || orgs.length === 0) {
+        alert(`No ${role} organization found`)
+        return
+      }
+
+      const firstOrg = orgs[0]
+      if (!firstOrg?.name) {
+        alert(`Invalid ${role} data returned`)
+        return
+      }
+
+      router.push(`/register/${role}?name=${encodeURIComponent(firstOrg.name)}`)
     } catch (err) {
-      console.error(err);
-      alert('Failed to fetch organization');
+      console.error('Fetch failed:', err)
+      alert('Failed to fetch organization')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col items-center justify-center px-6 py-16 space-y-16">
-      {/* Hero Section */}
       <div className="text-center max-w-3xl space-y-6">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
           Co-Build the Future of Innovation
@@ -57,7 +68,6 @@ export default function Home() {
         </p>
       </div>
 
-      {/* Dropdown & CTA */}
       <div className="flex flex-col sm:flex-row gap-4 items-center">
         <select
           value={role}
@@ -71,6 +81,7 @@ export default function Home() {
           <option value="research">Research Org</option>
           <option value="investor">Investor</option>
         </select>
+
         <button
           onClick={handleStart}
           disabled={!role || loading}
@@ -80,7 +91,6 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Logos Section */}
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6 pt-10">
         {logos.map((logo, index) => (
           <img
@@ -92,5 +102,5 @@ export default function Home() {
         ))}
       </div>
     </div>
-  );
+  )
 }
