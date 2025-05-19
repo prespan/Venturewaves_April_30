@@ -28,10 +28,7 @@ export default function Home() {
 
     try {
       const res = await fetch(`/api/register/${role}`);
-      const data = await res.json();
-
-      // Support both single object and array response
-      const org = Array.isArray(data) ? data[0] : data;
+      const org = await res.json();
 
       if (!res.ok || !org?.name) {
         alert(`No ${role} organization found`);
