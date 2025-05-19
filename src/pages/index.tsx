@@ -28,27 +28,16 @@ export default function Home() {
 
     try {
       const res = await fetch(`/api/register/${role}`)
-      const orgs = await res.json()
+      const org = await res.json()
 
-      console.log('Fetched data from API:', orgs)
+      console.log('Fetched data from API:', org)
 
-      if (!res.ok) {
-        alert(`Server error for role ${role}`)
+      if (!res.ok || !org || !org.name) {
+        alert(`No ${role} organization found or invalid data`)
         return
       }
 
-      if (!Array.isArray(orgs) || orgs.length === 0) {
-        alert(`No ${role} organization found`)
-        return
-      }
-
-      const firstOrg = orgs[0]
-      if (!firstOrg?.name) {
-        alert(`Invalid ${role} data returned`)
-        return
-      }
-
-      router.push(`/register/${role}?name=${encodeURIComponent(firstOrg.name)}`)
+      router.push(`/register/${role}?name=${encodeURIComponent(org.name)}`)
     } catch (err) {
       console.error('Fetch failed:', err)
       alert('Failed to fetch organization')
@@ -71,36 +60,4 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row gap-4 items-center">
         <select
           value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 rounded text-base text-gray-800 dark:text-white shadow focus:outline-none"
-        >
-          <option value="">Select Organization Type</option>
-          <option value="studio">Studio</option>
-          <option value="corporate">Corporate</option>
-          <option value="government">Government</option>
-          <option value="research">Research Org</option>
-          <option value="investor">Investor</option>
-        </select>
-
-        <button
-          onClick={handleStart}
-          disabled={!role || loading}
-          className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-6 py-2 rounded font-medium transition shadow"
-        >
-          {loading ? 'Loading...' : 'Get Started →'}
-        </button>
-      </div>
-
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6 pt-10">
-        {logos.map((logo, index) => (
-          <img
-            key={index}
-            src={`/logos/${logo}`}
-            alt="Logo"
-            className="h-10 w-auto object-contain grayscale hover:grayscale-0 transition"
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
+          onChange={(e) => setRole(e.target
