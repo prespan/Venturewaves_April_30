@@ -25,6 +25,7 @@ import {
 import { useCorporateChallenges } from "@/hooks/useCorporateChallenges";
 import { useCorporateProposals } from "@/hooks/useCorporateProposals";
 import { useCorporateProjects } from "@/hooks/useCorporateProjects";
+import useCorporatePartners from "@/hooks/useCorporatePartners";
 
 interface CorporateDashboardProps {
   organizationName?: string;
@@ -38,6 +39,7 @@ export default function CorporateDashboard({
   const { data: challenges } = useCorporateChallenges(corporateId);
   const { data: proposals } = useCorporateProposals(corporateId);
   const { data: projects } = useCorporateProjects(corporateId);
+  const { data: partners } = useCorporatePartners(corporateId);
 
   return (
     <div className="p-6 space-y-6">
@@ -84,12 +86,9 @@ export default function CorporateDashboard({
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-gray-500 mb-2">
-                      Deadline:{" "}
-                      {new Date(challenge.deadline).toLocaleDateString()}
+                      Deadline: {new Date(challenge.deadline).toLocaleDateString()}
                     </p>
-                    <Button variant="outline" size="sm">
-                      Manage
-                    </Button>
+                    <Button variant="outline" size="sm">Manage</Button>
                   </CardContent>
                 </Card>
               ))
@@ -113,9 +112,7 @@ export default function CorporateDashboard({
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button variant="outline" size="sm">
-                      Review
-                    </Button>
+                    <Button variant="outline" size="sm">Review</Button>
                   </CardContent>
                 </Card>
               ))
@@ -141,9 +138,7 @@ export default function CorporateDashboard({
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button variant="outline" size="sm">
-                      View
-                    </Button>
+                    <Button variant="outline" size="sm">View</Button>
                   </CardContent>
                 </Card>
               ))
@@ -154,21 +149,46 @@ export default function CorporateDashboard({
         </TabsContent>
 
         <TabsContent value="partners">
-          <p className="text-sm text-gray-500">
-            🤝 Partner Matching coming soon...
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {partners?.partners?.length ? (
+              partners.partners.map((studio: any) => (
+                <Card key={studio.id}>
+                  <CardHeader>
+                    <CardTitle>{studio.name}</CardTitle>
+                    <CardDescription>{studio.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-2">
+                      <a
+                        href={studio.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline text-sm"
+                      >
+                        Visit Website
+                      </a>
+                      <Button
+                        variant="default"
+                        onClick={() => alert(`Request sent to ${studio.name}`)}
+                      >
+                        Request Collaboration
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">No matching partners found.</p>
+            )}
+          </div>
         </TabsContent>
 
         <TabsContent value="messages">
-          <p className="text-sm text-gray-500">
-            💬 Messaging coming soon...
-          </p>
+          <p className="text-sm text-gray-500">💬 Messaging coming soon...</p>
         </TabsContent>
 
         <TabsContent value="calendar">
-          <p className="text-sm text-gray-500">
-            📅 Calendar integration coming soon...
-          </p>
+          <p className="text-sm text-gray-500">📅 Calendar integration coming soon...</p>
         </TabsContent>
       </Tabs>
     </div>
