@@ -26,7 +26,6 @@ import { useCorporateChallenges } from "@/hooks/useCorporateChallenges";
 import { useCorporateProposals } from "@/hooks/useCorporateProposals";
 import { useCorporateProjects } from "@/hooks/useCorporateProjects";
 import { useCorporatePartners } from "@/hooks/useCorporatePartners";
-;
 
 interface CorporateDashboardProps {
   organizationName?: string;
@@ -46,7 +45,7 @@ export default function CorporateDashboard({
     <div className="p-6 space-y-6">
       <div className="space-y-1">
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <Briefcase className="w-6 h-6 text-blue-600" />{" "}
+          <Briefcase className="w-6 h-6 text-blue-600" />
           {organizationName || "Corporate"} Dashboard
         </h1>
         <p className="text-sm text-gray-500">
@@ -76,6 +75,7 @@ export default function CorporateDashboard({
           </TabsTrigger>
         </TabsList>
 
+        {/* Challenges */}
         <TabsContent value="challenges">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {challenges?.length ? (
@@ -99,6 +99,7 @@ export default function CorporateDashboard({
           </div>
         </TabsContent>
 
+        {/* Proposals */}
         <TabsContent value="proposals">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {proposals?.length ? (
@@ -123,6 +124,7 @@ export default function CorporateDashboard({
           </div>
         </TabsContent>
 
+        {/* Projects */}
         <TabsContent value="projects">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {projects?.length ? (
@@ -149,6 +151,7 @@ export default function CorporateDashboard({
           </div>
         </TabsContent>
 
+        {/* Partners */}
         <TabsContent value="partners">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {partners?.partners?.length ? (
@@ -160,14 +163,16 @@ export default function CorporateDashboard({
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-col gap-2">
-                      <a
-                        href={studio.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 underline text-sm"
-                      >
-                        Visit Website
-                      </a>
+                      {studio.website && (
+                        <a
+                          href={studio.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline text-sm"
+                        >
+                          Visit Website
+                        </a>
+                      )}
                       <Button
                         variant="default"
                         onClick={() => alert(`Request sent to ${studio.name}`)}
@@ -184,10 +189,10 @@ export default function CorporateDashboard({
           </div>
         </TabsContent>
 
+        {/* Placeholder Tabs */}
         <TabsContent value="messages">
           <p className="text-sm text-gray-500">💬 Messaging coming soon...</p>
         </TabsContent>
-
         <TabsContent value="calendar">
           <p className="text-sm text-gray-500">📅 Calendar integration coming soon...</p>
         </TabsContent>

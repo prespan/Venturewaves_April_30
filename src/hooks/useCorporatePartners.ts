@@ -1,15 +1,18 @@
-import useSWR from "swr";
+import useSWR from 'swr';
 
-const fetcher = (url: string) =>
-  fetch(url)
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
-    });
+type Studio = {
+  id: number;
+  name: string;
+  description: string;
+  website?: string;
+  // any other fields
+};
 
 export function useCorporatePartners(corporateId: number) {
-  return useSWR(
+  return useSWR<{ partners: Studio[] }>(
     corporateId ? `/api/corporates/${corporateId}/partners` : null,
-    fetcher
+    (url: string) =>
+      fetch(url)
+        .then((res) => res.json())
   );
 }
