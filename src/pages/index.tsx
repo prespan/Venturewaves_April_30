@@ -26,8 +26,17 @@ export default function Home() {
     if (!role) return
     setLoading(true)
 
+    // Explicit endpoints for each role
+    const endpoints: Record<string, string> = {
+      studio: '/api/register/studio',
+      corporate: '/api/register/corporate',
+      government: '/api/register/government',
+      research: '/api/register/research',
+      investor: '/api/register/investor',
+    }
+
     try {
-      const res = await fetch(`/api/register/${role}`)
+      const res = await fetch(endpoints[role])
       const orgs = await res.json()
 
       console.log('Fetched data from API:', orgs)
