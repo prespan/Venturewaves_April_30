@@ -44,7 +44,7 @@ export default function Home() {
     } finally {
       setLoading(false)
     }
-  }
+  } // ✅ Correctly closed function
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col items-center justify-center px-6 py-16 space-y-16">
@@ -60,4 +60,36 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row gap-4 items-center">
         <select
           value={role}
-          onChange={(e) => setRole(e.target
+          onChange={(e) => setRole(e.target.value)}
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 rounded text-base text-gray-800 dark:text-white shadow focus:outline-none"
+        >
+          <option value="">Select Organization Type</option>
+          <option value="studio">Studio</option>
+          <option value="corporate">Corporate</option>
+          <option value="government">Government</option>
+          <option value="research">Research Org</option>
+          <option value="investor">Investor</option>
+        </select>
+
+        <button
+          onClick={handleStart}
+          disabled={!role || loading}
+          className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-6 py-2 rounded font-medium transition shadow"
+        >
+          {loading ? 'Loading...' : 'Get Started →'}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6 pt-10">
+        {logos.map((logo, index) => (
+          <img
+            key={index}
+            src={`/logos/${logo}`}
+            alt="Logo"
+            className="h-10 w-auto object-contain grayscale hover:grayscale-0 transition"
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
