@@ -1,7 +1,17 @@
 import useSWR from 'swr';
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+type Project = {
+  id: number;
+  title: string;
+  // ... other fields
+};
 
 export function useCorporateProjects(corporateId: number) {
-  return useSWR(corporateId ? `/api/corporates/${corporateId}/projects` : null, fetcher);
+  return useSWR<Project[]>(
+    corporateId ? `/api/corporates/${corporateId}/projects` : null,
+    (url: string) =>
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => data.projects) // ✅ extract correct key
+  );
 }
