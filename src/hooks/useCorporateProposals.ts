@@ -1,17 +1,29 @@
-import useSWR from 'swr';
+import { prisma } from '@/lib/prisma';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-type Proposal = {
-  id: number;
-  title: string;
-  // Add other expected fields here
-};
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
 
-export function useCorporateProposals(corporateId: number) {
-  return useSWR<Proposal[]>(
-    corporateId ? `/api/corporates/${corporateId}/proposals` : null,
-    (url: string) =>
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => data.proposals) // ✅ Fix: extract proposals
-  );
+  if (!id || typeof id !== 'string') {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
+  try {
+    const proposals = await prisma.proposal.findMany({
+      where: { challenge: { corporateId: parseInt(id) } },
+      include: {
+        challenge: true,
+        Studio: true,
+      },
+      orderBy: { submittedAt: 'desc' } // optional
+    });
+
+    return res.status(200).json({ proposals });
+  } catch (error) {
+    console.error('Proposal fetch failed:', error);
+    return res.status(500).json({
+      error: 'Failed to fetch proposals',
+      detail: error instanceof Error ? error.message : String(error),
+    });
+  }
 }
