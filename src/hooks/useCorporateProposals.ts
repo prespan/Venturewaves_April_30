@@ -1,29 +1,31 @@
-import { prisma } from '@/lib/prisma';
-import { NextApiRequest, NextApiResponse } from 'next';
+import useSWR from 'swr';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+type Proposal = {
+  id: number;
+  title: string;
+  status: string;
+  challenge?: {
+    title: string;
+  };
+  Studio?: {
+    name: string;
+  };
+  // Add any other expected fields here
+};
 
-  if (!id || typeof id !== 'string') {
-    return res.status(400).json({ error: 'Invalid ID' });
-  }
+const fetcher = (url: string) =>
+  fetch(url)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Failed to fetch ${url}: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((data) => data.proposals); // ✅ extract the nested "proposals" array
 
-  try {
-    const proposals = await prisma.proposal.findMany({
-      where: { challenge: { corporateId: parseInt(id) } },
-      include: {
-        challenge: true,
-        Studio: true,
-      },
-      orderBy: { submittedAt: 'desc' } // optional
-    });
-
-    return res.status(200).json({ proposals });
-  } catch (error) {
-    console.error('Proposal fetch failed:', error);
-    return res.status(500).json({
-      error: 'Failed to fetch proposals',
-      detail: error instanceof Error ? error.message : String(error),
-    });
-  }
+export function useCorporateProposals(corporateId: number) {
+  return useSWR<Proposal[]>(
+    corporateId ? `/api/corporates/${corporateId}/proposals` : null,
+    fetcher
+  );
 }
