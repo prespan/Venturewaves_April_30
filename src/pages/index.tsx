@@ -28,14 +28,15 @@ export default function Home() {
 
     try {
       const res = await fetch(`/api/register/${role}`);
-      const org = await res.json();
+      const data = await res.json();
 
-      if (!res.ok || !org?.name) {
+      if (!res.ok || !Array.isArray(data) || data.length === 0 || !data[0]?.name) {
         alert(`No ${role} organization found`);
         return;
       }
 
-      router.push(`/register/${role}?name=${encodeURIComponent(org.name)}`);
+      const firstOrg = data[0];
+      router.push(`/register/${role}?name=${encodeURIComponent(firstOrg.name)}`);
     } catch (err) {
       console.error(err);
       alert('Failed to fetch organization');
