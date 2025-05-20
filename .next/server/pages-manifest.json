@@ -4,5 +4,7 @@
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
   "/register/[role]": "pages/register/[role].js",
-  "/dashboard/corporate": "pages/dashboard/corporate.js"
+  "/api/register/[role]": "pages/api/register/[role].js",
+  "/dashboard/corporate": "pages/dashboard/corporate.js",
+  "/api/corporates/[id]/projects": "pages/api/corporates/[id]/projects.js"
 }
