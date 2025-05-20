@@ -3,5 +3,10 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
+  "/api/register/[role]": "pages/api/register/[role].js",
+  "/api/corporates/[id]/challenges": "pages/api/corporates/[id]/challenges.js",
+  "/api/corporates/[id]/proposals": "pages/api/corporates/[id]/proposals.js",
+  "/api/corporates/[id]/projects": "pages/api/corporates/[id]/projects.js",
+  "/api/corporates/[id]/partners": "pages/api/corporates/[id]/partners.js",
   "/dashboard/corporate": "pages/dashboard/corporate.js"
 }

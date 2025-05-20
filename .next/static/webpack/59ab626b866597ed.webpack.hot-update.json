@@ -1,0 +1,1 @@
+{"c":["webpack"],"r":["pages/register/[role]"],"m":["./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?absolutePagePath=%2Fworkspaces%2FVenturewaves_April_30%2Fsrc%2Fpages%2Fregister%2F%5Brole%5D.tsx&page=%2Fregister%2F%5Brole%5D!","./src/components/forms/CorporateForm.tsx","./src/pages/register/[role].tsx"]}
