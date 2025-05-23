@@ -13,7 +13,7 @@ model Studio {
   website       String
   address       String
   description   String
-  keyStartups   Json
+  keyStartups  Json
   logo          String?
   createdAt     DateTime              @default(now())
   collaborators ProjectCollaborator[]

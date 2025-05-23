@@ -9,7 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         name: true,
         description: true,
         logo: true,
-        address: true, // ✅ existing field in schema
+        address: true,
+        keyStartups: true, // ✅ Add this line
       },
       orderBy: {
         name: 'asc',
