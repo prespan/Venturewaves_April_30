@@ -1,6 +1,7 @@
+// ✅ src/pages/studios/index.tsx
 'use client'
 
-import { useStudios } from "@/hooks/usestudios";
+import { useStudios } from "@/hooks/useStudios";
 import {
   Card,
   CardHeader,
@@ -23,22 +24,38 @@ export default function StudiosDirectory() {
             <CardHeader>
               {studio.logo && (
                 <img
-                  src={studio.logo}
+                  src={`/logos/${studio.logo}`}
                   alt={`${studio.name} logo`}
-                  className="h-12 w-auto mb-4 object-contain"
+                  className="h-20 w-full mb-4 object-contain mx-auto"
+                  onError={(e) => {
+                    e.currentTarget.src = '/logos/default.png';
+                  }}
                 />
               )}
               <CardTitle>{studio.name}</CardTitle>
               <CardDescription>{studio.description}</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-1">
-              {studio.industry && <p><strong>Industry:</strong> {studio.industry}</p>}
-              {studio.location && <p><strong>Location:</strong> {studio.location}</p>}
+              {studio.industry && (
+                <p>
+                  <strong>Industry:</strong> {studio.industry}
+                </p>
+              )}
+              {studio.location && (
+                <p>
+                  <strong>Location:</strong> {studio.location}
+                </p>
+              )}
+              {studio.country && (
+                <p>
+                  <strong>Country:</strong> {studio.country}
+                </p>
+              )}
             </CardContent>
             <CardFooter className="mt-auto">
               <Button
-                variant="ghost"
-                className="text-gray-600 hover:bg-black hover:text-white ml-0"
+                variant="outline"
+                className="w-full border hover:bg-black hover:text-white"
                 onClick={() => alert(`Learn more about ${studio.name}`)}
               >
                 Learn More →
