@@ -4,13 +4,20 @@ type Studio = {
   id: number
   name: string
   description: string
-  industry?: string
-  location?: string
+  address?: string
   logo?: string
+  keyStartups?: string[]
 }
 
 export function useStudios() {
-  return useSWR<Studio[]>('/api/studios', (url: string) =>
-    fetch(url).then((res) => res.json())
-  )
+  return useSWR<Studio[]>('/api/studios', async (url: string) => {
+    const res = await fetch(url)
+    const data = await res.json()
+
+    // Ensure keyStartups is parsed properly
+    return data.map((studio: any) => ({
+      ...studio,
+      keyStartups: Array.isArray(studio.keyStartups) ? studio.keyStartups : [],
+    }))
+  })
 }
