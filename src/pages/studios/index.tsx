@@ -24,12 +24,13 @@ export default function StudiosDirectory() {
             className="flex flex-col justify-between h-full p-6 shadow-md hover:shadow-lg transition rounded-2xl"
           >
             <CardHeader className="items-center text-center p-0 pb-4">
-              <img
-                src={`/logos/${studio.logo || 'default.png'}`}
-                onError={(e) => (e.currentTarget.src = '/logos/default.png')}
-                alt={`${studio.name} logo`}
-                className="h-16 object-contain mx-auto mb-2"
-              />
+              {studio.logo && (
+                <img
+                  src={`/logos/${studio.logo}`}
+                  alt={`${studio.name} logo`}
+                  className="h-16 object-contain mx-auto mb-2"
+                />
+              )}
               <CardTitle className="text-lg font-semibold">{studio.name}</CardTitle>
               <CardDescription className="text-sm text-gray-500">
                 {studio.description}
