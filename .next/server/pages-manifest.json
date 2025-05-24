@@ -2,8 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/register/[role]": "pages/register/[role].js",
   "/dashboard/corporate": "pages/dashboard/corporate.js",
   "/studios": "pages/studios.js",
-  "/api/studios": "pages/api/studios.js",
-  "/register/[role]": "pages/register/[role].js"
+  "/api/studios": "pages/api/studios.js"
 }
