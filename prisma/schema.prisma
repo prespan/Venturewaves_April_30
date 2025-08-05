@@ -1,153 +1,607 @@
-generator client {
-  provider = "prisma-client-js"
+"use client";
+
+import { useState } from "react";
+import {
+  Briefcase,
+  FileText,
+  Users,
+  CalendarDays,
+  MessageSquare,
+  DollarSign,
+  Clock,
+  TrendingUp,
+  ExternalLink,
+  CheckCircle,
+} from "lucide-react";
+
+import { useCorporateChallenges } from "@/hooks/useCorporateChallenges";
+import { useCorporateProposals } from "@/hooks/useCorporateProposals";
+import { useCorporateProjects } from "@/hooks/useCorporateProjects";
+import { useCorporatePartners } from "@/hooks/useCorporatePartners";
+
+// TypeScript interfaces matching your existing Prisma schema
+interface Challenge {
+  id: number;
+  title: string;
+  description: string;
+  submittedBy: string;
+  deadline: string | Date;
+  postedAt: string | Date;
+  phase1Budget: number; // in cents
+  capitalCommitment: number; // in cents
+  equityOffered: number;
+  hasProposals: boolean;
+  projectLinked: boolean;
+  corporateId?: number;
+  governmentId?: number;
+  researchOrgId?: number;
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+interface Proposal {
+  id: number;
+  challengeId: number;
+  title: string;
+  description: string;
+  actionPlan: any; // JSON field
+  submittedBy: string;
+  submittedAt: string | Date;
+  status: string;
+  partOfProject: boolean;
+  studioId?: number;
+  challenge?: {
+    title: string;
+  };
+  Studio?: {
+    name: string;
+  };
 }
 
-model Studio {
-  id            Int                   @id @default(autoincrement())
-  name          String
-  website       String
-  address       String
-  description   String
-  keyStartups  Json
-  logo          String?
-  createdAt     DateTime              @default(now())
-  collaborators ProjectCollaborator[]
-  proposals     Proposal[]
+interface Project {
+  id: number;
+  challengeId: number;
+  proposalId: number;
+  investment: number; // in cents
+  milestones: any; // JSON field - array of milestones
+  createdAt: string | Date;
+  challenge?: {
+    title: string;
+  };
+  proposal?: {
+    title: string;
+    submittedBy: string;
+  };
 }
 
-model Corporate {
-  id              Int                   @id @default(autoincrement())
-  name            String
-  website         String
-  address         String
-  industryTags    Json
-  description     String
-  notableProducts Json
-  logo            String?
-  createdAt       DateTime              @default(now())
-  challenges      Challenge[]
-  collaborators   ProjectCollaborator[]
+interface Studio {
+  id: number;
+  name: string;
+  website: string;
+  address: string;
+  description: string;
+  keyStartups: any; // JSON field
+  logo?: string;
 }
 
-model Government {
-  id            Int                   @id @default(autoincrement())
-  name          String
-  address       String
-  website       String
-  focusAreas    Json
-  description   String
-  logo          String?
-  createdAt     DateTime              @default(now())
-  challenges    Challenge[]
-  collaborators ProjectCollaborator[]
+interface CorporateDashboardProps {
+  organizationName?: string;
+  corporateId: number;
 }
 
-model ResearchOrganization {
-  id           Int         @id @default(autoincrement())
-  name         String
-  website      String
-  address      String
-  focusDomains Json
-  description  String
-  logo         String?
-  createdAt    DateTime    @default(now())
-  challenges   Challenge[]
-}
+// Helper function to convert cents to dollars
+const formatCurrency = (cents: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
+};
 
-model Investor {
-  id                 Int                   @id @default(autoincrement())
-  name               String
-  website            String
-  address            String
-  focus              Json
-  notableInvestments Json
-  logo               String?
-  createdAt          DateTime              @default(now())
-  collaborators      ProjectCollaborator[]
-}
+// Demo data updated to match your schema structure (values in cents)
+const demoChallenges: Challenge[] = [
+  {
+    id: 1,
+    title: "Smart Energy Grid Optimization",
+    description: "Enhance grid efficiency using AI and IoT. Looking for innovative solutions to optimize energy distribution and reduce carbon footprint.",
+    submittedBy: "Corporate Energy Solutions",
+    deadline: "2025-07-30",
+    postedAt: "2025-01-01",
+    phase1Budget: 50000000, // $500,000 in cents
+    capitalCommitment: 200000000, // $2,000,000 in cents
+    equityOffered: 15,
+    hasProposals: true,
+    projectLinked: false,
+    corporateId: 1
+  },
+  {
+    id: 2,
+    title: "Predictive Maintenance for Industrial Equipment", 
+    description: "Predict failures using machine learning models. Reduce downtime and maintenance costs through advanced analytics.",
+    submittedBy: "Industrial Innovations Corp",
+    deadline: "2025-08-15",
+    postedAt: "2025-01-05",
+    phase1Budget: 70000000, // $700,000 in cents
+    capitalCommitment: 300000000, // $3,000,000 in cents
+    equityOffered: 12,
+    hasProposals: true,
+    projectLinked: true,
+    corporateId: 1
+  },
+  {
+    id: 3,
+    title: "Green Building Energy Management",
+    description: "Optimize building energy consumption. Develop smart systems for sustainable urban development.",
+    submittedBy: "Green Tech Solutions",
+    deadline: "2025-09-01",
+    postedAt: "2025-01-10",
+    phase1Budget: 90000000, // $900,000 in cents
+    capitalCommitment: 400000000, // $4,000,000 in cents
+    equityOffered: 20,
+    hasProposals: false,
+    projectLinked: false,
+    corporateId: 1
+  }
+];
 
-model Challenge {
-  id                Int                   @id @default(autoincrement())
-  title             String
-  description       String
-  submittedBy       String
-  deadline          DateTime
-  postedAt          DateTime
-  phase1Budget      Int
-  capitalCommitment Int
-  equityOffered     Int
-  hasProposals      Boolean               @default(false)
-  projectLinked     Boolean               @default(false)
-  corporateId       Int?
-  governmentId      Int?
-  researchOrgId     Int?
-  corporate         Corporate?            @relation(fields: [corporateId], references: [id])
-  government        Government?           @relation(fields: [governmentId], references: [id])
-  researchOrg       ResearchOrganization? @relation(fields: [researchOrgId], references: [id])
-  project           Project?
-  proposals         Proposal[]
-}
+const demoProposals: Proposal[] = [
+  {
+    id: 1,
+    challengeId: 1,
+    title: "GridIQ - AI-Powered Energy Optimization",
+    description: "Advanced machine learning algorithms for real-time grid optimization and predictive energy distribution.",
+    actionPlan: {
+      phases: [
+        "Research & Development",
+        "Prototype Development", 
+        "Pilot Testing",
+        "Market Validation"
+      ]
+    },
+    submittedBy: "Energy Innovation Studio",
+    submittedAt: "2025-01-15",
+    status: "PENDING",
+    partOfProject: false,
+    studioId: 1,
+    challenge: { title: "Smart Energy Grid Optimization" },
+    Studio: { name: "Antler" }
+  },
+  {
+    id: 2,
+    challengeId: 1,
+    title: "SmartGridX - IoT Energy Management",
+    description: "Comprehensive IoT solution for smart grid management with real-time monitoring and automated responses.",
+    actionPlan: {
+      phases: [
+        "IoT Sensor Development",
+        "Platform Integration",
+        "Testing & Validation"
+      ]
+    },
+    submittedBy: "Smart Grid Innovations",
+    submittedAt: "2025-01-12",
+    status: "UNDER_REVIEW",
+    partOfProject: false,
+    studioId: 2,
+    challenge: { title: "Smart Energy Grid Optimization" },
+    Studio: { name: "Founders Factory" }
+  },
+  {
+    id: 3,
+    challengeId: 2,
+    title: "EquipPredict - ML Maintenance Platform",
+    description: "Machine learning platform for predictive maintenance with advanced analytics and failure prediction.",
+    actionPlan: {
+      phases: [
+        "Algorithm Development",
+        "Data Integration",
+        "Platform Development",
+        "Enterprise Deployment"
+      ]
+    },
+    submittedBy: "Industrial AI Solutions",
+    submittedAt: "2025-01-10",
+    status: "APPROVED",
+    partOfProject: true,
+    studioId: 3,
+    challenge: { title: "Predictive Maintenance for Industrial Equipment" },
+    Studio: { name: "eFounders" }
+  }
+];
 
-model Proposal {
-  id            Int       @id @default(autoincrement())
-  challengeId   Int
-  title         String
-  description   String
-  actionPlan    Json
-  submittedBy   String
-  submittedAt   DateTime  @default(now())
-  status        String    @default("PENDING")
-  partOfProject Boolean   @default(false)
-  studioId      Int?
-  project       Project?  @relation("ProposalToProject")
-  challenge     Challenge @relation(fields: [challengeId], references: [id])
-  Studio        Studio?   @relation(fields: [studioId], references: [id])
-}
+const demoProjects: Project[] = [
+  {
+    id: 1,
+    challengeId: 1,
+    proposalId: 1,
+    investment: 50000000, // $500,000 in cents
+    milestones: [
+      "Prototype Development - Completed",
+      "Pilot Testing - In Progress", 
+      "Market Validation - Pending"
+    ],
+    createdAt: "2025-01-20",
+    challenge: { title: "Smart Energy Grid Optimization" },
+    proposal: { 
+      title: "GridIQ - AI-Powered Energy Optimization",
+      submittedBy: "Energy Innovation Studio"
+    }
+  },
+  {
+    id: 2,
+    challengeId: 2,
+    proposalId: 3,
+    investment: 70000000, // $700,000 in cents
+    milestones: [
+      "Algorithm Development - Completed",
+      "Data Integration - Completed",
+      "Platform Development - In Progress",
+      "Enterprise Deployment - Pending"
+    ],
+    createdAt: "2025-01-25",
+    challenge: { title: "Predictive Maintenance for Industrial Equipment" },
+    proposal: {
+      title: "EquipPredict - ML Maintenance Platform",
+      submittedBy: "Industrial AI Solutions"
+    }
+  }
+];
 
-model Project {
-  id             Int                   @id @default(autoincrement())
-  challengeId    Int                   @unique
-  proposalId     Int                   @unique
-  investment     Int
-  milestones     Json
-  createdAt      DateTime              @default(now())
-  challenge      Challenge             @relation(fields: [challengeId], references: [id])
-  proposal       Proposal              @relation("ProposalToProject", fields: [proposalId], references: [id])
-  collaborators  ProjectCollaborator[]
-}
+const demoStudios: Studio[] = [
+  {
+    id: 1,
+    name: "Antler",
+    website: "https://antler.co",
+    address: "London, UK",
+    description: "Global early-stage VC and startup generator, building the next wave of tech companies.",
+    keyStartups: ["Airwallex", "Carsome", "Reebelo"],
+    logo: null
+  },
+  {
+    id: 2,
+    name: "Founders Factory",
+    website: "https://foundersfactory.com",
+    address: "London, UK", 
+    description: "Corporate-backed incubator and accelerator building startups with global corporates.",
+    keyStartups: ["Onfido", "What3Words", "Blockchain"],
+    logo: null
+  },
+  {
+    id: 3,
+    name: "eFounders",
+    website: "https://efounders.com",
+    address: "Paris, France",
+    description: "Startup studio creating B2B SaaS companies from scratch with systematic approach.",
+    keyStartups: ["Aircall", "Spendesk", "Front"],
+    logo: null
+  }
+];
 
-model ProjectCollaborator {
-  id           Int         @id @default(autoincrement())
-  projectId    Int
-  studioId     Int?
-  corporateId  Int?
-  governmentId Int?
-  investorId   Int?
-  role         String
-  invitedAt    DateTime    @default(now())
-  corporate    Corporate?  @relation(fields: [corporateId], references: [id])
-  government   Government? @relation(fields: [governmentId], references: [id])
-  investor     Investor?   @relation(fields: [investorId], references: [id])
-  project      Project     @relation(fields: [projectId], references: [id])
-  studio       Studio?     @relation(fields: [studioId], references: [id])
-}
+export default function CorporateDashboard(props: CorporateDashboardProps) {
+  const { corporateId, organizationName } = props;
+  const [activeTab, setActiveTab] = useState("challenges");
+  
+  const { data: challenges } = useCorporateChallenges(corporateId);
+  const { data: proposals } = useCorporateProposals(corporateId);
+  const { data: projects } = useCorporateProjects(corporateId);
+  const { data: partners } = useCorporatePartners(corporateId);
 
-model Message {
-  id        Int      @id @default(autoincrement())
-  sender    String
-  recipient String
-  content   String
-  createdAt DateTime @default(now())
-}
+  // Use demo data if database is empty
+  const displayChallenges = challenges?.length ? challenges : demoChallenges;
+  const displayProposals = proposals?.length ? proposals : demoProposals;
+  const displayProjects = projects?.length ? projects : demoProjects;
+  const displayStudios = partners?.length ? partners : demoStudios;
 
-model LegalDoc {
-  id         Int      @id @default(autoincrement())
-  type       String
-  fileUrl    String
-  uploadedAt DateTime @default(now())
+  const tabs = [
+    { id: "challenges", label: "Challenges", icon: FileText, count: displayChallenges.length },
+    { id: "proposals", label: "Proposals", icon: MessageSquare, count: displayProposals.length },
+    { id: "projects", label: "Projects", icon: Briefcase, count: displayProjects.length },
+    { id: "studios", label: "Studio Partners", icon: Users, count: displayStudios.length },
+    { id: "messages", label: "Messages", icon: MessageSquare, count: 0 },
+    { id: "calendar", label: "Calendar", icon: CalendarDays, count: 0 },
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'approved': return 'bg-green-100 text-green-800 border-green-200';
+      case 'under_review': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'active': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  // Calculate progress percentage from milestones
+  const calculateProgress = (milestones: any): number => {
+    if (!Array.isArray(milestones)) return 0;
+    const completed = milestones.filter(m => 
+      typeof m === 'string' && m.toLowerCase().includes('completed')
+    ).length;
+    return Math.round((completed / milestones.length) * 100);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-blue-600 rounded-lg">
+              <Briefcase className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {organizationName || "Corporate"} Dashboard
+            </h1>
+          </div>
+          <p className="text-gray-600">
+            Welcome! Manage your corporate innovation activity and partnerships below.
+          </p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Active Challenges</p>
+                <p className="text-2xl font-bold text-gray-900">{displayChallenges.length}</p>
+              </div>
+              <FileText className="w-8 h-8 text-blue-600" />
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Proposals</p>
+                <p className="text-2xl font-bold text-gray-900">{displayProposals.length}</p>
+              </div>
+              <MessageSquare className="w-8 h-8 text-green-600" />
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Active Projects</p>
+                <p className="text-2xl font-bold text-gray-900">{displayProjects.length}</p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-purple-600" />
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Investment</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {formatCurrency(displayProjects.reduce((sum, p) => sum + (p.investment || 0), 0))}
+                </p>
+              </div>
+              <DollarSign className="w-8 h-8 text-emerald-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+          <nav className="flex overflow-x-auto">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-3 px-6 py-4 font-medium text-sm whitespace-nowrap border-b-2 transition-colors ${
+                    activeTab === tab.id
+                      ? "border-blue-500 text-blue-600 bg-blue-50"
+                      : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                  {tab.count > 0 && (
+                    <span className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full text-xs">
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Tab Content */}
+        <div>
+          {activeTab === "challenges" && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {displayChallenges.map((challenge) => (
+                <div key={challenge.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 leading-tight">{challenge.title}</h3>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${challenge.hasProposals ? 'bg-green-100 text-green-800 border-green-200' : 'bg-yellow-100 text-yellow-800 border-yellow-200'}`}>
+                        {challenge.hasProposals ? 'Has Proposals' : 'Open'}
+                      </span>
+                    </div>
+                    <p className="text-gray-600 text-sm mb-4">{challenge.description}</p>
+                    
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Clock className="w-4 h-4" />
+                        Deadline: {new Date(challenge.deadline).toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <DollarSign className="w-4 h-4" />
+                        Phase 1: {formatCurrency(challenge.phase1Budget)}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <TrendingUp className="w-4 h-4" />
+                        Equity: {challenge.equityOffered}%
+                      </div>
+                    </div>
+                    
+                    <button className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                      Manage Challenge
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === "proposals" && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {displayProposals.map((proposal) => (
+                <div key={proposal.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">{proposal.title}</h3>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(proposal.status)}`}>
+                        {proposal.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                    
+                    <p className="text-gray-600 text-sm mb-4">{proposal.description}</p>
+                    
+                    <div className="space-y-2 mb-4">
+                      <p className="text-sm text-gray-600">
+                        <span className="font-medium">Challenge:</span> {proposal.challenge?.title}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        <span className="font-medium">Studio:</span> {proposal.Studio?.name || proposal.submittedBy}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        <span className="font-medium">Submitted:</span> {new Date(proposal.submittedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    
+                    <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                      Review Proposal
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === "projects" && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {displayProjects.map((project) => {
+                const progress = calculateProgress(project.milestones);
+                return (
+                  <div key={project.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                    <div className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="text-xl font-semibold text-gray-900">{project.proposal?.title || `Project #${project.id}`}</h3>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium border bg-green-100 text-green-800 border-green-200`}>
+                          Active
+                        </span>
+                      </div>
+                      
+                      <div className="space-y-3 mb-4">
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="w-4 h-4 text-emerald-600" />
+                          <span className="text-sm font-medium text-gray-600">Investment:</span>
+                          <span className="text-lg font-bold text-emerald-600">{formatCurrency(project.investment)}</span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          <span className="font-medium">Challenge:</span> {project.challenge?.title}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          <span className="font-medium">Team:</span> {project.proposal?.submittedBy}
+                        </p>
+                        
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="font-medium text-gray-600">Progress</span>
+                            <span className="text-gray-600">{progress}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-blue-600 h-2 rounded-full transition-all" 
+                              style={{ width: `${progress}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm font-medium text-gray-600 mb-2">Milestones ({Array.isArray(project.milestones) ? project.milestones.length : 0})</p>
+                          <div className="space-y-1">
+                            {Array.isArray(project.milestones) && project.milestones.slice(0, 3).map((milestone: string, idx: number) => (
+                              <div key={idx} className="flex items-center gap-2 text-sm text-gray-600">
+                                <CheckCircle className={`w-3 h-3 ${milestone.toLowerCase().includes('completed') ? 'text-green-500' : 'text-gray-300'}`} />
+                                {milestone}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {activeTab === "studios" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayStudios.map((studio) => (
+                <div key={studio.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{studio.name}</h3>
+                    <p className="text-gray-600 text-sm mb-4">{studio.description}</p>
+                    
+                    <div className="space-y-2 mb-4">
+                      <p className="text-sm text-gray-500">📍 {studio.address}</p>
+                      {Array.isArray(studio.keyStartups) && studio.keyStartups.length > 0 && (
+                        <div>
+                          <p className="text-sm font-medium text-gray-600 mb-1">Key Startups:</p>
+                          <p className="text-sm text-gray-500">{studio.keyStartups.slice(0, 3).join(', ')}</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <a
+                        href={studio.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Visit Website
+                      </a>
+                      <button
+                        className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                        onClick={() => alert(`Collaboration request sent to ${studio.name}`)}
+                      >
+                        Request Collaboration
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === "messages" && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+              <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Messaging Coming Soon</h3>
+              <p className="text-gray-500">Real-time communication with partners and studios will be available soon.</p>
+            </div>
+          )}
+
+          {activeTab === "calendar" && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+              <CalendarDays className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Calendar Integration Coming Soon</h3>
+              <p className="text-gray-500">Schedule meetings and track important deadlines with integrated calendar functionality.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -1,124 +1,117 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react'
 
-interface StudioData {
-  name: string;
-  website: string;
-  address: string;
-  focusAreas: string;
-  description: string;
-  notableStartups: string;
-  logo?: string;
+type Props = {
+  onSubmit: (data: any) => void
+  loading: boolean
+  demoData?: any
 }
 
-export default function StudioForm() {
-  const [formData, setFormData] = useState<StudioData>({
+export default function StudioForm({ onSubmit, loading, demoData }: Props) {
+  const [formData, setFormData] = useState({
     name: '',
     website: '',
     address: '',
-    focusAreas: '',
     description: '',
-    notableStartups: '',
+    keyStartups: '',
     logo: '',
-  });
+  })
 
-  const [loading, setLoading] = useState(true);
-
+  // Pre-fill form with demo data when it arrives
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('/api/register/studio?demo=true');
-        if (!res.ok) throw new Error('Failed to load');
-        const data = await res.json();
-        setFormData({
-          name: data.name || '',
-          website: data.website || '',
-          address: data.address || '',
-          focusAreas: JSON.stringify(data.focusAreas || []),
-          description: data.description || '',
-          notableStartups: JSON.stringify(data.notableStartups || []),
-          logo: data.logo || '',
-        });
-      } catch (error) {
-        console.error('Preload error:', error);
-      } finally {
-        setLoading(false);
-      }
+    if (demoData) {
+      setFormData({
+        name: demoData.name || '',
+        website: demoData.website || '',
+        address: demoData.address || '',
+        description: demoData.description || '',
+        keyStartups: (demoData.keyStartups || []).join(', '),
+        logo: demoData.logo || '',
+      })
     }
-
-    fetchData();
-  }, []);
+  }, [demoData])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('Form submitted (placeholder)');
-  };
-
-  if (loading) return <p>Loading...</p>;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Convert comma-separated string to array for JSON field
+    const submitData = {
+      ...formData,
+      keyStartups: formData.keyStartups.split(',').map(startup => startup.trim()).filter(startup => startup)
+    }
+    
+    onSubmit(submitData)
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
+    <form onSubmit={handleSubmit} className="w-full space-y-4">
       <input
         name="name"
-        placeholder="Studio Name"
+        placeholder="Studio Name (e.g. Antler, Founders Factory)"
         value={formData.name}
         onChange={handleChange}
-        className="w-full border p-2 rounded"
+        className="w-full border p-3 rounded-lg"
         required
       />
+      
       <input
         name="website"
-        placeholder="Website"
+        placeholder="Website (e.g. https://www.antler.co)"
         value={formData.website}
         onChange={handleChange}
-        className="w-full border p-2 rounded"
+        className="w-full border p-3 rounded-lg"
+        required
       />
+      
       <input
         name="address"
-        placeholder="Address"
+        placeholder="Location (e.g. London, UK)"
         value={formData.address}
         onChange={handleChange}
-        className="w-full border p-2 rounded"
+        className="w-full border p-3 rounded-lg"
+        required
       />
-      <textarea
-        name="focusAreas"
-        placeholder='Focus Areas (e.g. ["FinTech", "HealthTech"])'
-        value={formData.focusAreas}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
-      />
+      
       <textarea
         name="description"
-        placeholder="Description"
+        placeholder="Studio Description (What you do, your mission, focus areas)"
         value={formData.description}
         onChange={handleChange}
-        className="w-full border p-2 rounded"
+        className="w-full border p-3 rounded-lg h-24"
+        required
       />
+      
       <textarea
-        name="notableStartups"
-        placeholder='Notable Startups (e.g. ["AppX", "Growly"])'
-        value={formData.notableStartups}
+        name="keyStartups"
+        placeholder="Key Startups (comma-separated: e.g. Airalo, Reebelo, TrustingSocial)"
+        value={formData.keyStartups}
         onChange={handleChange}
-        className="w-full border p-2 rounded"
+        className="w-full border p-3 rounded-lg h-20"
       />
+      
       <input
         name="logo"
-        placeholder="Logo URL"
+        placeholder="Logo URL (optional)"
         value={formData.logo}
         onChange={handleChange}
-        className="w-full border p-2 rounded"
+        className="w-full border p-3 rounded-lg"
       />
-      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
-        Register
+      
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+      >
+        {loading ? 'Registering...' : 'Register Studio'}
       </button>
     </form>
-  );
+  )
 }

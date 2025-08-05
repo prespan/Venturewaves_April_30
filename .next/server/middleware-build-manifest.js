@@ -19,15 +19,25 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/dashboard/corporate": [
+    "/challenges": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/dashboard/corporate.js"
+      "static/chunks/pages/challenges.js"
     ],
-    "/studios": [
+    "/corporates": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/studios.js"
+      "static/chunks/pages/corporates.js"
+    ],
+    "/governments": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/governments.js"
+    ],
+    "/investors": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/investors.js"
     ]
   },
   "ampFirstPages": []

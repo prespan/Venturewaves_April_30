@@ -1,67 +1,95 @@
 'use client'
 
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import CorporateForm from '../../components/forms/CorporateForm'
-// import GovernmentForm from '../../components/forms/GovernmentForm'
-// import InvestorForm from '../../components/forms/InvestorForm'
-// import ResearchForm from '../../components/forms/ResearchForm'
-// import StudioForm from '../../components/forms/StudioForm'
+import GovernmentForm from '../../components/forms/GovernmentForm'
+import InvestorForm from '../../components/forms/InvestorForm'
+import ResearchForm from '../../components/forms/ResearchForm'
+import StudioForm from '../../components/forms/StudioForm'
 
 export default function RegisterRole() {
   const router = useRouter()
   const { role } = router.query
-  const [organization, setOrganization] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [demoData, setDemoData] = useState(null)
 
+  // Fetch demo data when component loads
   useEffect(() => {
-    if (!role || typeof role !== 'string') return
-
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`/api/register/${role}`)
-        if (!res.ok) throw new Error('Failed to fetch organization')
-        const data = await res.json()
-        if (data) {
-          setOrganization(data) // ✅ updated: data is a single object
-        }
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
+    if (role && typeof role === 'string') {
+      fetch(`/api/register/${role}`)
+        .then(res => res.json())
+        .then(data => setDemoData(data))
+        .catch(err => console.error('Failed to load demo data:', err))
     }
-
-    fetchData()
   }, [role])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (organization?.id) {
-      router.push(`/dashboard/${role}?id=${organization.id}`)
+  const handleSubmit = async (formData: any) => {
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/register/${role}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+
+      if (!response.ok) {
+        throw new Error('Registration failed')
+      }
+
+      const result = await response.json()
+      
+      // Redirect to dashboard after successful registration
+      router.push(`/dashboard/${role}?id=${result.id}`)
+    } catch (error) {
+      console.error('Registration error:', error)
+      alert('Registration failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
-  if (loading) return <p className="p-8 text-center">Loading organization data...</p>
-  if (!organization) return <p className="p-8 text-center text-red-500">Organization not found.</p>
+  if (!role || typeof role !== 'string') {
+    return <p className="p-8 text-center">Loading...</p>
+  }
+
+  const roleDisplayNames = {
+    corporate: 'Corporate',
+    government: 'Government',
+    investor: 'Investor',
+    research: 'Research Organization',
+    studio: 'Studio'
+  }
+
+  const displayName = roleDisplayNames[role as keyof typeof roleDisplayNames] || role
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
-      <h1 className="text-2xl font-bold mb-6 capitalize">Register as {role}</h1>
-      <form onSubmit={handleSubmit} className="w-full max-w-xl">
-        {role === 'corporate' && <CorporateForm data={organization} />}
-        {/* Add more role-based forms as needed */}
-        {/* {role === 'government' && <GovernmentForm data={organization} />} */}
-        {/* {role === 'investor' && <InvestorForm data={organization} />} */}
-        {/* {role === 'research' && <ResearchForm data={organization} />} */}
-        {/* {role === 'studio' && <StudioForm data={organization} />} */}
-        <button
-          type="submit"
-          className="mt-6 w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700"
-        >
-          Register
-        </button>
-      </form>
+      <h1 className="text-2xl font-bold mb-6">Register as {displayName}</h1>
+      
+      <div className="w-full max-w-xl">
+        {role === 'corporate' && (
+          <CorporateForm onSubmit={handleSubmit} loading={loading} demoData={demoData} />
+        )}
+        {role === 'government' && (
+          <GovernmentForm onSubmit={handleSubmit} loading={loading} demoData={demoData} />
+        )}
+        {role === 'investor' && (
+          <InvestorForm onSubmit={handleSubmit} loading={loading} demoData={demoData} />
+        )}
+        {role === 'research' && (
+          <ResearchForm onSubmit={handleSubmit} loading={loading} demoData={demoData} />
+        )}
+        {role === 'studio' && (
+          <StudioForm onSubmit={handleSubmit} loading={loading} demoData={demoData} />
+        )}
+        
+        {!['corporate', 'government', 'investor', 'research', 'studio'].includes(role) && (
+          <p className="text-center text-red-500">Invalid registration type</p>
+        )}
+      </div>
     </main>
   )
 }

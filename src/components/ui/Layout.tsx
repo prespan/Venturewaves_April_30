@@ -7,7 +7,7 @@ const menu = [
   { href: '/', label: 'Dashboard' },
   { href: '/studios', label: 'Studios' },
   { href: '/corporates', label: 'Corporates' },
-  { href: '/research-orgs', label: 'Research Organizations' },
+  { href: '/research-organizations', label: 'Research Organizations' },
   { href: '/governments', label: 'Governments' },
   { href: '/investors', label: 'Investors' },
   { href: '/challenges', label: 'Challenges' },
