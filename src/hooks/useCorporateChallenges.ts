@@ -10,25 +10,41 @@ export function useCorporateChallenges(corporateId: number) {
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
+        console.log('🔍 Fetching challenges for corporate ID:', corporateId);
         setLoading(true);
-        const response = await fetch(`/api/corporate/${corporateId}/challenges`);
+        
+        const url = `/api/corporates/${corporateId}/challenges`;
+        console.log('🔍 Calling URL:', url);
+        
+        const response = await fetch(url);
+        console.log('🔍 Response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch challenges');
+          throw new Error(`Failed to fetch challenges: ${response.status}`);
         }
         const result = await response.json();
+        console.log('🔍 Response data:', result);
+        
         setData(result.challenges || []);
       } catch (err) {
+        console.error('❌ Error fetching challenges:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
-        setData([]); // Return empty array to fall back to demo data
+        setData([]);
       } finally {
         setLoading(false);
       }
     };
 
+    console.log('🔍 useCorporateChallenges hook called with corporateId:', corporateId);
     if (corporateId) {
       fetchChallenges();
+    } else {
+      console.log('🔍 No corporateId provided, skipping fetch');
+      setLoading(false);
     }
   }, [corporateId]);
+
+  console.log('🔍 Hook returning - data length:', data.length, 'loading:', loading, 'error:', error);
 
   return { data, loading, error };
 }

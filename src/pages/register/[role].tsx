@@ -17,7 +17,8 @@ export default function RegisterRole() {
   // Fetch demo data when component loads
   useEffect(() => {
     if (role && typeof role === 'string') {
-      fetch(`/api/register/${role}`)
+      // UPDATED: Added 's' to make it plural
+      fetch(`/api/register/${role}s`)
         .then(res => res.json())
         .then(data => setDemoData(data))
         .catch(err => console.error('Failed to load demo data:', err))
@@ -27,7 +28,8 @@ export default function RegisterRole() {
   const handleSubmit = async (formData: any) => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/register/${role}`, {
+      // UPDATED: Added 's' to make it plural
+      const response = await fetch(`/api/register/${role}s`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

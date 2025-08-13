@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from 'next/router';
 import {
   LayoutDashboard,
   FileText,
@@ -14,6 +15,7 @@ import {
   CheckCircle,
   Microscope,
   GraduationCap,
+  Plus,
 } from "lucide-react";
 
 import { useResearchChallenges } from "@/hooks/useResearchChallenges";
@@ -23,6 +25,7 @@ import { useResearchPartners } from "@/hooks/useResearchPartners";
 
 interface ResearchDashboardProps {
   organizationName?: string;
+  organizationId?: number;
   researchOrgId: number;
 }
 
@@ -135,8 +138,9 @@ const demoPartners = {
 };
 
 export default function ResearchDashboard(props: ResearchDashboardProps) {
-  const { researchOrgId, organizationName } = props;
+  const { researchOrgId, organizationName, organizationId } = props;
   const [activeTab, setActiveTab] = useState("challenges");
+  const router = useRouter();
   
   const { data: challenges } = useResearchChallenges(researchOrgId);
   const { data: proposals } = useResearchProposals(researchOrgId);
@@ -148,6 +152,34 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
   const displayProposals = proposals?.length ? proposals : demoProposals;
   const displayProjects = projects?.length ? projects : demoProjects;
   const displayPartners = partners?.partners?.length ? partners : demoPartners;
+
+  // Navigation handlers
+  const handleCreateChallenge = () => {
+    router.push({
+      pathname: '/challenges/create',
+      query: {
+        orgType: 'RESEARCH',
+        orgId: organizationId || researchOrgId,
+        orgName: organizationName
+      }
+    });
+  };
+
+  const handleManageChallenge = (challengeId: number) => {
+    router.push(`/challenges/${challengeId}/manage`);
+  };
+
+  const handleReviewProposal = (proposalId: number) => {
+    router.push(`/proposals/${proposalId}/review`);
+  };
+
+  const handleViewProjectDetails = (projectId: number) => {
+    router.push(`/projects/${projectId}`);
+  };
+
+  const handleRequestCollaboration = (partnerId: number) => {
+    router.push(`/studios/${partnerId}/collaborate`);
+  };
 
   const tabs = [
     { id: "challenges", label: "Research Challenges", icon: Microscope, count: displayChallenges.length },
@@ -177,13 +209,24 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-green-600 rounded-lg">
-              <LayoutDashboard className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-green-600 rounded-lg">
+                <LayoutDashboard className="w-6 h-6 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {organizationName || "Research Organization"} Dashboard
+              </h1>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {organizationName || "Research Organization"} Dashboard
-            </h1>
+            
+            {/* Create Challenge Button */}
+            <button
+              onClick={handleCreateChallenge}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+            >
+              <Plus className="w-5 h-5" />
+              Create Challenge
+            </button>
           </div>
           <p className="text-gray-600">
             Advancing scientific research through innovative partnerships and breakthrough technologies.
@@ -204,6 +247,15 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
+                <p className="text-sm font-medium text-gray-600">Total Proposals</p>
+                <p className="text-2xl font-bold text-gray-900">{displayProposals.length}</p>
+              </div>
+              <MessageSquare className="w-8 h-8 text-blue-600" />
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-sm font-medium text-gray-600">Active Projects</p>
                 <p className="text-2xl font-bold text-gray-900">{displayProjects.length}</p>
               </div>
@@ -219,15 +271,6 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
                 </p>
               </div>
               <DollarSign className="w-8 h-8 text-emerald-600" />
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Research Partners</p>
-                <p className="text-2xl font-bold text-gray-900">{displayPartners.partners.length}</p>
-              </div>
-              <Users className="w-8 h-8 text-blue-600" />
             </div>
           </div>
         </div>
@@ -300,7 +343,10 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
                       )}
                     </div>
                     
-                    <button className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
+                    <button 
+                      onClick={() => handleManageChallenge(challenge.id)}
+                      className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+                    >
                       Manage Challenge
                     </button>
                   </div>
@@ -336,7 +382,10 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
                       )}
                     </div>
                     
-                    <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <button 
+                      onClick={() => handleReviewProposal(proposal.id)}
+                      className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    >
                       Review Proposal
                     </button>
                   </div>
@@ -404,7 +453,10 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
                       </div>
                     </div>
                     
-                    <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <button 
+                      onClick={() => handleViewProjectDetails(project.id)}
+                      className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    >
                       View Research Details
                     </button>
                   </div>
@@ -449,8 +501,8 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
                         </a>
                       )}
                       <button
+                        onClick={() => handleRequestCollaboration(partner.id)}
                         className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
-                        onClick={() => alert(`Research collaboration request sent to ${partner.name}`)}
                       >
                         Request Collaboration
                       </button>

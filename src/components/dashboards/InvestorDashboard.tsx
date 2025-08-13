@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from 'next/router';
 import {
   TrendingUp,
   FileText,
@@ -15,6 +16,7 @@ import {
   PieChart,
   BarChart3,
   Briefcase,
+  Plus,
 } from "lucide-react";
 
 import { useInvestorChallenges } from "@/hooks/useInvestorChallenges";
@@ -24,6 +26,7 @@ import { useInvestorOpportunities } from "@/hooks/useInvestorOpportunities";
 
 interface InvestorDashboardProps {
   organizationName?: string;
+  organizationId?: number;
   investorId: number;
 }
 
@@ -151,8 +154,9 @@ const demoChallenges = [
 ];
 
 export default function InvestorDashboard(props: InvestorDashboardProps) {
-  const { investorId, organizationName } = props;
+  const { investorId, organizationName, organizationId } = props;
   const [activeTab, setActiveTab] = useState("opportunities");
+  const router = useRouter();
   
   const { data: challenges } = useInvestorChallenges(investorId);
   const { data: investments } = useInvestorInvestments(investorId);
@@ -164,6 +168,34 @@ export default function InvestorDashboard(props: InvestorDashboardProps) {
   const displayInvestments = investments?.length ? investments : demoInvestments;
   const displayPortfolio = portfolio?.length ? portfolio : demoPortfolio;
   const displayOpportunities = opportunities?.length ? opportunities : demoOpportunities;
+
+  // Navigation handlers
+  const handleCreateChallenge = () => {
+    router.push({
+      pathname: '/challenges/create',
+      query: {
+        orgType: 'INVESTOR',
+        orgId: organizationId || investorId,
+        orgName: organizationName
+      }
+    });
+  };
+
+  const handleReviewDeal = (opportunityId: number) => {
+    router.push(`/opportunities/${opportunityId}/review`);
+  };
+
+  const handleViewInvestment = (investmentId: number) => {
+    router.push(`/investments/${investmentId}`);
+  };
+
+  const handlePortfolioDetails = (companyId: number) => {
+    router.push(`/portfolio/${companyId}`);
+  };
+
+  const handleManageChallenge = (challengeId: number) => {
+    router.push(`/challenges/${challengeId}/manage`);
+  };
 
   const tabs = [
     { id: "opportunities", label: "Deal Flow", icon: Target, count: displayOpportunities.length },
@@ -198,13 +230,24 @@ export default function InvestorDashboard(props: InvestorDashboardProps) {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-emerald-600 rounded-lg">
-              <TrendingUp className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-emerald-600 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {organizationName || "Investor"} Dashboard
+              </h1>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {organizationName || "Investor"} Dashboard
-            </h1>
+            
+            {/* Create Challenge Button */}
+            <button
+              onClick={handleCreateChallenge}
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+            >
+              <Plus className="w-5 h-5" />
+              Create Challenge
+            </button>
           </div>
           <p className="text-gray-600">
             Track investments, discover opportunities, and manage your innovation portfolio.
@@ -318,7 +361,10 @@ export default function InvestorDashboard(props: InvestorDashboardProps) {
                       <p className="text-xs text-gray-500">{opportunity.traction}</p>
                     </div>
                     
-                    <button className="w-full px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors">
+                    <button 
+                      onClick={() => handleReviewDeal(opportunity.id)}
+                      className="w-full px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+                    >
                       Review Deal
                     </button>
                   </div>
@@ -363,7 +409,10 @@ export default function InvestorDashboard(props: InvestorDashboardProps) {
                       </div>
                     </div>
                     
-                    <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <button 
+                      onClick={() => handleViewInvestment(investment.id)}
+                      className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    >
                       View Investment
                     </button>
                   </div>
@@ -408,7 +457,10 @@ export default function InvestorDashboard(props: InvestorDashboardProps) {
                       </p>
                     </div>
                     
-                    <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <button 
+                      onClick={() => handlePortfolioDetails(company.id)}
+                      className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    >
                       Portfolio Details
                     </button>
                   </div>
@@ -445,7 +497,10 @@ export default function InvestorDashboard(props: InvestorDashboardProps) {
                       </div>
                     </div>
                     
-                    <button className="w-full px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors">
+                    <button 
+                      onClick={() => handleManageChallenge(challenge.id)}
+                      className="w-full px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+                    >
                       Manage Challenge
                     </button>
                   </div>

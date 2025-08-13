@@ -1,6 +1,6 @@
 "use client";
-
 import { useState } from "react";
+import { useRouter } from 'next/router';
 import {
   Building2,
   FileText,
@@ -12,6 +12,7 @@ import {
   TrendingUp,
   ExternalLink,
   CheckCircle,
+  Plus,
   Target,
 } from "lucide-react";
 
@@ -22,6 +23,7 @@ import { useGovernmentPartners } from "@/hooks/useGovernmentPartners";
 
 interface GovernmentDashboardProps {
   organizationName?: string;
+  organizationId?: number;
   governmentId: number;
 }
 
@@ -131,8 +133,9 @@ const demoPartners = {
 };
 
 export default function GovernmentDashboard(props: GovernmentDashboardProps) {
-  const { governmentId, organizationName } = props;
+  const { governmentId, organizationName, organizationId } = props;
   const [activeTab, setActiveTab] = useState("challenges");
+  const router = useRouter();
   
   const { data: challenges } = useGovernmentChallenges(governmentId);
   const { data: proposals } = useGovernmentProposals(governmentId);
@@ -144,6 +147,34 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
   const displayProposals = proposals?.length ? proposals : demoProposals;
   const displayProjects = projects?.length ? projects : demoProjects;
   const displayPartners = partners?.partners?.length ? partners : demoPartners;
+
+  // Navigation handlers
+  const handleCreateChallenge = () => {
+    router.push({
+      pathname: '/challenges/create',
+      query: {
+        orgType: 'GOVERNMENT',
+        orgId: organizationId || governmentId,
+        orgName: organizationName
+      }
+    });
+  };
+
+  const handleManageChallenge = (challengeId: number) => {
+    router.push(`/challenges/${challengeId}/manage`);
+  };
+
+  const handleReviewProposal = (proposalId: number) => {
+    router.push(`/proposals/${proposalId}/review`);
+  };
+
+  const handleViewProjectDetails = (projectId: number) => {
+    router.push(`/projects/${projectId}`);
+  };
+
+  const handleRequestCollaboration = (partnerId: number) => {
+    router.push(`/studios/${partnerId}/collaborate`);
+  };
 
   const tabs = [
     { id: "challenges", label: "Public Challenges", icon: Target, count: displayChallenges.length },
@@ -174,13 +205,24 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-indigo-600 rounded-lg">
-              <Building2 className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-green-600 rounded-lg">
+                <Building2 className="w-6 h-6 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {organizationName || "Government"} Dashboard
+              </h1>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {organizationName || "Government"} Dashboard
-            </h1>
+            
+            {/* Create Challenge Button */}
+            <button
+              onClick={handleCreateChallenge}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+            >
+              <Plus className="w-5 h-5" />
+              Create Challenge
+            </button>
           </div>
           <p className="text-gray-600">
             Manage public innovation initiatives and partnerships for citizen benefit.
@@ -195,7 +237,7 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                 <p className="text-sm font-medium text-gray-600">Public Challenges</p>
                 <p className="text-2xl font-bold text-gray-900">{displayChallenges.length}</p>
               </div>
-              <Target className="w-8 h-8 text-indigo-600" />
+              <Target className="w-8 h-8 text-green-600" />
             </div>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -204,7 +246,7 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                 <p className="text-sm font-medium text-gray-600">Active Projects</p>
                 <p className="text-2xl font-bold text-gray-900">{displayProjects.length}</p>
               </div>
-              <Building2 className="w-8 h-8 text-purple-600" />
+              <Building2 className="w-8 h-8 text-green-600" />
             </div>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -215,7 +257,7 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                   ${totalBudget.toLocaleString()}
                 </p>
               </div>
-              <DollarSign className="w-8 h-8 text-emerald-600" />
+              <DollarSign className="w-8 h-8 text-green-600" />
             </div>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -226,7 +268,7 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                   {totalCitizensImpacted.toLocaleString()}
                 </p>
               </div>
-              <Users className="w-8 h-8 text-blue-600" />
+              <Users className="w-8 h-8 text-green-600" />
             </div>
           </div>
         </div>
@@ -242,7 +284,7 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-3 px-6 py-4 font-medium text-sm whitespace-nowrap border-b-2 transition-colors ${
                     activeTab === tab.id
-                      ? "border-indigo-500 text-indigo-600 bg-indigo-50"
+                      ? "border-green-500 text-green-600 bg-green-50"
                       : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                   }`}
                 >
@@ -293,7 +335,10 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                       )}
                     </div>
                     
-                    <button className="w-full px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                    <button 
+                      onClick={() => handleManageChallenge(challenge.id)}
+                      className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+                    >
                       Manage Challenge
                     </button>
                   </div>
@@ -329,7 +374,10 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                       )}
                     </div>
                     
-                    <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <button 
+                      onClick={() => handleReviewProposal(proposal.id)}
+                      className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    >
                       Review Proposal
                     </button>
                   </div>
@@ -377,7 +425,7 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div 
-                              className="bg-indigo-600 h-2 rounded-full transition-all" 
+                              className="bg-green-600 h-2 rounded-full transition-all" 
                               style={{ width: `${project.progress}%` }}
                             ></div>
                           </div>
@@ -397,7 +445,10 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                       </div>
                     </div>
                     
-                    <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                    <button 
+                      onClick={() => handleViewProjectDetails(project.id)}
+                      className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    >
                       View Details
                     </button>
                   </div>
@@ -435,15 +486,15 @@ export default function GovernmentDashboard(props: GovernmentDashboardProps) {
                           href={partner.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                          className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm font-medium"
                         >
                           <ExternalLink className="w-4 h-4" />
                           Visit Website
                         </a>
                       )}
                       <button
-                        className="w-full px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-                        onClick={() => alert(`Partnership request sent to ${partner.name}`)}
+                        onClick={() => handleRequestCollaboration(partner.id)}
+                        className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
                       >
                         Request Partnership
                       </button>

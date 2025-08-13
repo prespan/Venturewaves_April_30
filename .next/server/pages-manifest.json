@@ -2,11 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/challenges": "pages/challenges.js",
-  "/investors": "pages/investors.js",
-  "/api/governments": "pages/api/governments.js",
-  "/governments": "pages/governments.js",
-  "/api/challenges": "pages/api/challenges.js",
-  "/corporates": "pages/corporates.js",
-  "/api/corporates": "pages/api/corporates.js"
+  "/": "pages/index.js"
 }
