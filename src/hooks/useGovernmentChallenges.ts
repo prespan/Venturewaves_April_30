@@ -10,7 +10,7 @@ export function useGovernmentChallenges(governmentId: number) {
     const fetchChallenges = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/government/${governmentId}/challenges`);
+        const response = await fetch(`/api/governments/${governmentId}/challenges`);
         if (!response.ok) {
           throw new Error('Failed to fetch government challenges');
         }

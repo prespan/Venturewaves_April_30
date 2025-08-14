@@ -10,7 +10,8 @@ export function useResearchPartners(researchOrgId: number) {
     const fetchPartners = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/research/${researchOrgId}/partners`);
+        // Fixed URL to match your API route structure
+        const response = await fetch(`/api/research-organizations/${researchOrgId}/partners`);
         if (!response.ok) {
           throw new Error('Failed to fetch research partners');
         }
@@ -18,7 +19,7 @@ export function useResearchPartners(researchOrgId: number) {
         setData(result.partners || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-        setData([]); // Return empty array to fall back to demo data
+        setData([]); // Return empty array on error
       } finally {
         setLoading(false);
       }

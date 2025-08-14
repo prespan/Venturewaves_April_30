@@ -16,6 +16,9 @@ import {
   Microscope,
   GraduationCap,
   Plus,
+  Target,
+  Calendar,
+  Mail,
 } from "lucide-react";
 
 import { useResearchChallenges } from "@/hooks/useResearchChallenges";
@@ -29,141 +32,43 @@ interface ResearchDashboardProps {
   researchOrgId: number;
 }
 
-// Demo data for Research Organization
-const demoChallenges = [
-  {
-    id: 1,
-    title: "AI-Powered Medical Diagnosis System",
-    description: "Develop machine learning algorithms for early disease detection using medical imaging and patient data analysis.",
-    deadline: "2025-09-30",
-    phase1Budget: 1800000,
-    equityOffered: 10,
-    researchArea: "Healthcare AI",
-    status: "Active"
-  },
-  {
-    id: 2,
-    title: "Sustainable Energy Storage Solutions",
-    description: "Research next-generation battery technologies for renewable energy grid storage and electric vehicle applications.",
-    deadline: "2025-10-15",
-    phase1Budget: 2500000,
-    equityOffered: 15,
-    researchArea: "Clean Energy",
-    status: "Active"
-  },
-  {
-    id: 3,
-    title: "Quantum Computing Applications",
-    description: "Explore practical quantum computing solutions for cryptography, optimization, and scientific simulation.",
-    deadline: "2025-11-01",
-    phase1Budget: 3500000,
-    equityOffered: 20,
-    researchArea: "Quantum Tech",
-    status: "Active"
-  }
-];
-
-const demoProposals = [
-  {
-    id: 1,
-    title: "MedAI Diagnostics by DeepMind Ventures",
-    challenge: { title: "AI-Powered Medical Diagnosis System" },
-    status: "UNDER_REVIEW",
-    submittedBy: "DeepMind Ventures",
-    score: 4.8,
-    submittedAt: "2025-01-20"
-  },
-  {
-    id: 2,
-    title: "GridBattery by Tesla Research",
-    challenge: { title: "Sustainable Energy Storage Solutions" },
-    status: "PENDING",
-    submittedBy: "Tesla Research",
-    score: 4.6,
-    submittedAt: "2025-01-18"
-  },
-  {
-    id: 3,
-    title: "QuantumSolve by IBM Quantum",
-    challenge: { title: "Quantum Computing Applications" },
-    status: "APPROVED",
-    submittedBy: "IBM Quantum",
-    score: 4.9,
-    submittedAt: "2025-01-16"
-  }
-];
-
-const demoProjects = [
-  {
-    id: 1,
-    investment: 1800000,
-    milestones: ["Literature Review", "Algorithm Development", "Clinical Testing", "Validation"],
-    challenge: { title: "AI-Powered Medical Diagnosis System" },
-    progress: 45,
-    status: "In Progress",
-    researchPhase: "Development"
-  },
-  {
-    id: 2,
-    investment: 3500000,
-    milestones: ["Theoretical Framework", "Proof of Concept", "Implementation", "Testing"],
-    challenge: { title: "Quantum Computing Applications" },
-    progress: 25,
-    status: "Early Stage",
-    researchPhase: "Research"
-  }
-];
-
-const demoPartners = {
-  partners: [
-    {
-      id: 1,
-      name: "Cambridge Innovation",
-      description: "Leading university research commercialization and technology transfer organization.",
-      website: "https://cambridge-innovation.com",
-      location: "Cambridge, UK",
-      rating: 4.9,
-      specialization: "Research Commercialization"
-    },
-    {
-      id: 2,
-      name: "MIT Technology Licensing",
-      description: "Pioneering technology transfer and startup incubation for breakthrough research.",
-      website: "https://tlo.mit.edu",
-      location: "Boston, USA",
-      rating: 4.8,
-      specialization: "Deep Tech Transfer"
-    }
-  ]
-};
-
 export default function ResearchDashboard(props: ResearchDashboardProps) {
-  const { researchOrgId, organizationName, organizationId } = props;
-  const [activeTab, setActiveTab] = useState("challenges");
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState("challenges");
   
-  const { data: challenges } = useResearchChallenges(researchOrgId);
-  const { data: proposals } = useResearchProposals(researchOrgId);
-  const { data: projects } = useResearchProjects(researchOrgId);
-  const { data: partners } = useResearchPartners(researchOrgId);
+  // Get researchOrgId from URL query parameter if not provided as prop
+  const researchOrgIdFromUrl = router.query.id ? parseInt(router.query.id as string) : null;
+  const researchOrgId = props.researchOrgId || researchOrgIdFromUrl;
+  
+  const { organizationName, organizationId } = props;
+  
+  const { data: challenges, loading: challengesLoading, error: challengesError } = useResearchChallenges(researchOrgId!);
+  const { data: proposals, error: proposalsError } = useResearchProposals(researchOrgId!);
+  const { data: projects, error: projectsError } = useResearchProjects(researchOrgId!);
+  const { data: partners, error: partnersError } = useResearchPartners(researchOrgId!);
 
-  // Use demo data if database is empty
-  const displayChallenges = challenges?.length ? challenges : demoChallenges;
-  const displayProposals = proposals?.length ? proposals : demoProposals;
-  const displayProjects = projects?.length ? projects : demoProjects;
-  const displayPartners = partners?.partners?.length ? partners : demoPartners;
+  // Debug logging
+  console.log('🔍 Research Dashboard Data:', {
+    researchOrgId,
+    challenges,
+    proposals,
+    projects,
+    partners
+  });
 
-  // Navigation handlers
-  const handleCreateChallenge = () => {
-    router.push({
-      pathname: '/challenges/create',
-      query: {
-        orgType: 'RESEARCH',
-        orgId: organizationId || researchOrgId,
-        orgName: organizationName
-      }
-    });
-  };
+  // Use only real database data - no demo data fallback
+  const displayChallenges = challenges || [];
+  const displayProposals = proposals || [];
+  const displayProjects = projects || [];
+  // Fix partners data structure - handle both array and object with partners property
+  const displayPartners = Array.isArray(partners) 
+    ? partners 
+    : (partners && typeof partners === 'object' && 'partners' in partners) 
+      ? (partners as any).partners || []
+      : [];
+
+  // Calculate total funding from projects
+  const totalFunding = displayProjects.reduce((sum: number, project: any) => sum + (project.investment || 0), 0);
 
   const handleManageChallenge = (challengeId: number) => {
     router.push(`/challenges/${challengeId}/manage`);
@@ -173,36 +78,49 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
     router.push(`/proposals/${proposalId}/review`);
   };
 
-  const handleViewProjectDetails = (projectId: number) => {
+  const handleViewProject = (projectId: number) => {
     router.push(`/projects/${projectId}`);
   };
 
-  const handleRequestCollaboration = (partnerId: number) => {
-    router.push(`/studios/${partnerId}/collaborate`);
+  const handleRequestPartnership = (partnerId: number) => {
+    router.push(`/partners/${partnerId}/request`);
   };
 
   const tabs = [
     { id: "challenges", label: "Research Challenges", icon: Microscope, count: displayChallenges.length },
     { id: "proposals", label: "Proposals", icon: MessageSquare, count: displayProposals.length },
     { id: "projects", label: "Projects", icon: GraduationCap, count: displayProjects.length },
-    { id: "partners", label: "Partners", icon: Users, count: displayPartners.partners.length },
-    { id: "messages", label: "Messages", icon: MessageSquare, count: 0 },
-    { id: "calendar", label: "Calendar", icon: CalendarDays, count: 0 },
+    { id: "partners", label: "Partners", icon: Users, count: displayPartners ? displayPartners.length : 0 },
+    { id: "messages", label: "Messages", icon: Mail, count: 0 },
+    { id: "calendar", label: "Calendar", icon: Calendar, count: 0 },
   ];
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'approved': return 'bg-green-100 text-green-800 border-green-200';
       case 'under_review': return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'active': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
       case 'in progress': return 'bg-purple-100 text-purple-800 border-purple-200';
       case 'early stage': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'on track': return 'bg-green-100 text-green-800 border-green-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const totalFunding = displayProjects.reduce((sum, p) => sum + (p.investment || 0), 0);
+  // Show loading state if we don't have a researchOrgId yet
+  if (!researchOrgId) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-100 -mx-16 -my-16 px-16 py-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading research dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-100 -mx-16 -my-16 px-16 py-16">
@@ -219,9 +137,8 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
               </h1>
             </div>
             
-            {/* Create Challenge Button */}
-            <button
-              onClick={handleCreateChallenge}
+            <button 
+              onClick={() => router.push(`/challenges/create?orgType=RESEARCH&orgId=${researchOrgId}&orgName=${organizationName || 'Research Organization'}`)}
               className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
             >
               <Plus className="w-5 h-5" />
@@ -266,9 +183,7 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Research Funding</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  ${totalFunding.toLocaleString()}
-                </p>
+                <p className="text-2xl font-bold text-gray-900">${totalFunding.toLocaleString()}</p>
               </div>
               <DollarSign className="w-8 h-8 text-emerald-600" />
             </div>
@@ -304,142 +219,150 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
         </div>
 
         {/* Tab Content */}
-        <div>
-          {activeTab === "challenges" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {displayChallenges.map((challenge: any) => (
-                <div key={challenge.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900 leading-tight">{challenge.title}</h3>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(challenge.status || 'active')}`}>
-                        {challenge.status || 'Active'}
-                      </span>
+        {activeTab === "challenges" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {displayChallenges.length > 0 ? displayChallenges.map((challenge: any) => (
+              <div key={challenge.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 leading-tight">{challenge.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(challenge.status || 'active')}`}>
+                      {challenge.status || 'Active'}
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4">{challenge.description}</p>
+                  
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <Clock className="w-4 h-4" />
+                      Deadline: {new Date(challenge.deadline).toLocaleDateString()}
                     </div>
-                    <p className="text-gray-600 text-sm mb-4">{challenge.description}</p>
-                    
-                    <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <DollarSign className="w-4 h-4" />
+                      Funding: ${challenge.phase1Budget?.toLocaleString() || 'N/A'}
+                    </div>
+                    {challenge.researchArea && (
                       <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Clock className="w-4 h-4" />
-                        Deadline: {new Date(challenge.deadline).toLocaleDateString()}
+                        <Microscope className="w-4 h-4" />
+                        Area: {challenge.researchArea}
                       </div>
-                      {challenge.phase1Budget && (
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <DollarSign className="w-4 h-4" />
-                          Funding: ${challenge.phase1Budget.toLocaleString()}
-                        </div>
-                      )}
-                      {challenge.researchArea && (
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <Microscope className="w-4 h-4" />
-                          Area: {challenge.researchArea}
-                        </div>
-                      )}
-                      {challenge.equityOffered && (
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <TrendingUp className="w-4 h-4" />
-                          Equity: {challenge.equityOffered}%
-                        </div>
-                      )}
+                    )}
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <TrendingUp className="w-4 h-4" />
+                      Equity: {challenge.equityOffered || 0}%
                     </div>
-                    
-                    <button 
-                      onClick={() => handleManageChallenge(challenge.id)}
-                      className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                      Manage Challenge
-                    </button>
                   </div>
+                  
+                  <button 
+                    onClick={() => handleManageChallenge(challenge.id)}
+                    className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    Manage Challenge
+                  </button>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )) : (
+              <div className="col-span-full bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+                <Microscope className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Research Challenges Yet</h3>
+                <p className="text-gray-500">Create your first research challenge to get started.</p>
+              </div>
+            )}
+          </div>
+        )}
 
-          {activeTab === "proposals" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {displayProposals.map((proposal: any) => (
-                <div key={proposal.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">{proposal.title}</h3>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border flex-shrink-0 ${getStatusColor(proposal.status)}`}>
-                        {proposal.status.replace('_', ' ')}
-                      </span>
-                    </div>
-                    
-                    <div className="space-y-2 mb-4">
-                      <p className="text-sm text-gray-600">
-                        <span className="font-medium">Challenge:</span> {proposal.challenge?.title}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        <span className="font-medium">Research Partner:</span> {proposal.submittedBy}
-                      </p>
-                      {proposal.score && (
-                        <div className="flex items-center gap-1">
-                          <span className="text-sm font-medium text-gray-600">Score:</span>
-                          <span className="text-sm font-bold text-emerald-600">{proposal.score}/5.0</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <button 
-                      onClick={() => handleReviewProposal(proposal.id)}
-                      className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      Review Proposal
-                    </button>
+        {activeTab === "proposals" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {displayProposals.length > 0 ? displayProposals.map((proposal: any) => (
+              <div key={proposal.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">{proposal.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(proposal.status)}`}>
+                      {proposal.status?.replace('_', ' ') || 'Pending'}
+                    </span>
                   </div>
+                  
+                  <div className="space-y-2 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Challenge:</span> {proposal.challenge?.title || 'N/A'}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Research Partner:</span> {proposal.submittedBy || 'Unknown'}
+                    </p>
+                    {proposal.score && (
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-medium text-gray-600">Score:</span>
+                        <span className="text-sm font-bold text-emerald-600">{proposal.score}/5.0</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <button 
+                    onClick={() => handleReviewProposal(proposal.id)}
+                    className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Review Proposal
+                  </button>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )) : (
+              <div className="col-span-full bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+                <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Proposals Yet</h3>
+                <p className="text-gray-500">Proposals from research partners will appear here once you have active challenges.</p>
+              </div>
+            )}
+          </div>
+        )}
 
-          {activeTab === "projects" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {displayProjects.map((project: any) => (
-                <div key={project.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-xl font-semibold text-gray-900">Research Project #{project.id}</h3>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(project.status || 'active')}`}>
-                        {project.status || 'Active'}
-                      </span>
+        {activeTab === "projects" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {displayProjects.length > 0 ? displayProjects.map((project: any) => (
+              <div key={project.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-xl font-semibold text-gray-900">Research Project #{project.id}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(project.status || 'active')}`}>
+                      {project.status || 'Active'}
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-3 mb-4">
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="w-4 h-4 text-emerald-600" />
+                      <span className="text-sm font-medium text-gray-600">Funding:</span>
+                      <span className="text-lg font-bold text-emerald-600">${(project.investment || 0).toLocaleString()}</span>
                     </div>
                     
-                    <div className="space-y-3 mb-4">
+                    {project.researchPhase && (
                       <div className="flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-emerald-600" />
-                        <span className="text-sm font-medium text-gray-600">Funding:</span>
-                        <span className="text-lg font-bold text-emerald-600">${(project.investment || 0).toLocaleString()}</span>
+                        <GraduationCap className="w-4 h-4 text-purple-600" />
+                        <span className="text-sm font-medium text-gray-600">Phase:</span>
+                        <span className="text-sm font-bold text-purple-600">{project.researchPhase}</span>
                       </div>
-                      
-                      {project.researchPhase && (
-                        <div className="flex items-center gap-2">
-                          <GraduationCap className="w-4 h-4 text-purple-600" />
-                          <span className="text-sm font-medium text-gray-600">Phase:</span>
-                          <span className="text-sm font-bold text-purple-600">{project.researchPhase}</span>
+                    )}
+                    
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Challenge:</span> {project.challenge?.title || 'N/A'}
+                    </p>
+                    
+                    {project.progress && (
+                      <div>
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="font-medium text-gray-600">Progress</span>
+                          <span className="text-gray-600">{project.progress}%</span>
                         </div>
-                      )}
-                      
-                      <p className="text-sm text-gray-600">
-                        <span className="font-medium">Research Area:</span> {project.challenge?.title}
-                      </p>
-                      
-                      {project.progress && (
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="font-medium text-gray-600">Progress</span>
-                            <span className="text-gray-600">{project.progress}%</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-green-600 h-2 rounded-full transition-all" 
-                              style={{ width: `${project.progress}%` }}
-                            ></div>
-                          </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-green-600 h-2 rounded-full transition-all" 
+                            style={{ width: `${project.progress}%` }}
+                          ></div>
                         </div>
-                      )}
-                      
+                      </div>
+                    )}
+                    
+                    {project.milestones && (
                       <div>
                         <p className="text-sm font-medium text-gray-600 mb-2">Milestones ({project.milestones?.length || 0})</p>
                         <div className="space-y-1">
@@ -451,84 +374,256 @@ export default function ResearchDashboard(props: ResearchDashboardProps) {
                           ))}
                         </div>
                       </div>
-                    </div>
-                    
-                    <button 
-                      onClick={() => handleViewProjectDetails(project.id)}
-                      className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    )}
+                  </div>
+                  
+                  <button 
+                    onClick={() => handleViewProject(project.id)}
+                    className="w-full px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            )) : (
+              <div className="col-span-full bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+                <GraduationCap className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Projects Yet</h3>
+                <p className="text-gray-500">Active research projects will appear here when proposals are approved and funded.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "partners" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayPartners && displayPartners.length > 0 ? displayPartners.map((partner: any) => (
+              <div key={partner.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{partner.name}</h3>
+                  <p className="text-gray-600 text-sm mb-4">{partner.description}</p>
+                  
+                  <div className="space-y-2 mb-4">
+                    {partner.address && (
+                      <p className="text-sm text-gray-500">📍 {partner.address}</p>
+                    )}
+                    {partner.location && (
+                      <p className="text-sm text-gray-500">📍 {partner.location}</p>
+                    )}
+                    {partner.specialization && (
+                      <p className="text-sm text-gray-500">🧪 {partner.specialization}</p>
+                    )}
+                    {partner.rating && (
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-medium text-gray-600">Rating:</span>
+                        <span className="text-sm font-bold text-emerald-600">{partner.rating}/5.0</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {partner.website && (
+                      <a
+                        href={partner.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm font-medium"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Visit Website
+                      </a>
+                    )}
+                    <button
+                      onClick={() => handleRequestPartnership(partner.id)}
+                      className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
                     >
-                      View Research Details
+                      Request Partnership
                     </button>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )) : (
+              <div className="col-span-full bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+                <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Partners Yet</h3>
+                <p className="text-gray-500">Research partners will appear here as you collaborate on challenges and projects.</p>
+              </div>
+            )}
+          </div>
+        )}
 
-          {activeTab === "partners" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayPartners.partners.map((partner: any) => (
-                <div key={partner.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{partner.name}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{partner.description}</p>
-                    
-                    <div className="space-y-2 mb-4">
-                      {partner.location && (
-                        <p className="text-sm text-gray-500">📍 {partner.location}</p>
-                      )}
-                      {partner.specialization && (
-                        <p className="text-sm text-gray-500">🧪 {partner.specialization}</p>
-                      )}
-                      {partner.rating && (
-                        <div className="flex items-center gap-1">
-                          <span className="text-sm font-medium text-gray-600">Rating:</span>
-                          <span className="text-sm font-bold text-emerald-600">{partner.rating}/5.0</span>
-                        </div>
-                      )}
+        {activeTab === "messages" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Recent Messages */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Messages</h3>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                  <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                    C
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium text-gray-900">Cambridge Innovation</span>
+                      <span className="text-xs text-gray-500">2 hours ago</span>
                     </div>
-                    
-                    <div className="space-y-2">
-                      {partner.website && (
-                        <a
-                          href={partner.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm font-medium"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                          Visit Website
-                        </a>
-                      )}
-                      <button
-                        onClick={() => handleRequestCollaboration(partner.id)}
-                        className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
-                      >
-                        Request Collaboration
-                      </button>
-                    </div>
+                    <p className="text-sm text-gray-600">Research proposal for AI Medical Diagnosis challenge</p>
                   </div>
                 </div>
-              ))}
+                
+                <div className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                    M
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium text-gray-900">MIT Technology Licensing</span>
+                      <span className="text-xs text-gray-500">1 day ago</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Update on Quantum Computing research project</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg">
+                  <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                    S
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium text-gray-900">Stanford Research Institute</span>
+                      <span className="text-xs text-gray-500">3 days ago</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Collaboration proposal for Energy Storage project</p>
+                  </div>
+                </div>
+              </div>
+              
+              <button className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                View All Messages
+              </button>
             </div>
-          )}
 
-          {activeTab === "messages" && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
-              <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Research Messaging Coming Soon</h3>
-              <p className="text-gray-500">Collaborate with research partners and academic institutions.</p>
-            </div>
-          )}
+            {/* Quick Actions */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+              <div className="space-y-3">
+                <button className="w-full flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <Mail className="w-5 h-5 text-green-600" />
+                  <span className="text-gray-900">Compose Message</span>
+                </button>
+                
+                <button className="w-full flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <Users className="w-5 h-5 text-blue-600" />
+                  <span className="text-gray-900">Broadcast to Research Partners</span>
+                </button>
+                
+                <button className="w-full flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <Microscope className="w-5 h-5 text-purple-600" />
+                  <span className="text-gray-900">Send Challenge Update</span>
+                </button>
+              </div>
 
-          {activeTab === "calendar" && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
-              <CalendarDays className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Research Calendar Coming Soon</h3>
-              <p className="text-gray-500">Track research milestones, conferences, and collaboration meetings.</p>
+              <div className="mt-6 p-4 bg-green-50 rounded-lg">
+                <h4 className="font-medium text-green-900 mb-2">Research Communication Guidelines</h4>
+                <ul className="text-sm text-green-700 space-y-1">
+                  <li>• Include relevant research area and methodology</li>
+                  <li>• Reference challenge specifications clearly</li>
+                  <li>• Respond to partner inquiries within 24 hours</li>
+                </ul>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {activeTab === "calendar" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Upcoming Events */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Events</h3>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3 p-3 border-l-4 border-green-500 bg-green-50 rounded-lg">
+                  <Calendar className="w-5 h-5 text-green-600 mt-0.5" />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium text-gray-900">AI Medical Diagnosis - Proposal Deadline</span>
+                      <span className="text-xs text-gray-500">Tomorrow</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Final research proposals due by 5:00 PM EST</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 p-3 border-l-4 border-blue-500 bg-blue-50 rounded-lg">
+                  <Calendar className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium text-gray-900">Quarterly Research Review</span>
+                      <span className="text-xs text-gray-500">Dec 15</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Review all active research projects and partnerships</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 p-3 border-l-4 border-purple-500 bg-purple-50 rounded-lg">
+                  <Calendar className="w-5 h-5 text-purple-600 mt-0.5" />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium text-gray-900">Research Partnership Meeting</span>
+                      <span className="text-xs text-gray-500">Dec 20</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Monthly sync with Cambridge Innovation and MIT</p>
+                  </div>
+                </div>
+              </div>
+              
+              <button className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                View Full Calendar
+              </button>
+            </div>
+
+            {/* Calendar Management */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Calendar Management</h3>
+              <div className="space-y-3">
+                <button className="w-full flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <Plus className="w-5 h-5 text-green-600" />
+                  <span className="text-gray-900">Schedule Meeting</span>
+                </button>
+                
+                <button className="w-full flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <Clock className="w-5 h-5 text-blue-600" />
+                  <span className="text-gray-900">Set Challenge Deadline</span>
+                </button>
+                
+                <button className="w-full flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <Target className="w-5 h-5 text-purple-600" />
+                  <span className="text-gray-900">Add Research Milestone</span>
+                </button>
+              </div>
+
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h4 className="font-medium text-gray-900 mb-3">This Month's Summary</h4>
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-green-600">3</div>
+                    <div className="text-xs text-gray-600">Deadlines</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-blue-600">2</div>
+                    <div className="text-xs text-gray-600">Meetings</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-purple-600">1</div>
+                    <div className="text-xs text-gray-600">Reviews</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-orange-600">1</div>
+                    <div className="text-xs text-gray-600">Launch</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

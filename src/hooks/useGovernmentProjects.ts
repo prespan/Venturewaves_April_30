@@ -10,7 +10,7 @@ export function useGovernmentProjects(governmentId: number) {
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/government/${governmentId}/projects`);
+        const response = await fetch(`/api/governments/${governmentId}/projects`);
         if (!response.ok) {
           throw new Error('Failed to fetch government projects');
         }

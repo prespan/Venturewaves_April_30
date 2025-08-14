@@ -10,7 +10,8 @@ export function useResearchChallenges(researchOrgId: number) {
     const fetchChallenges = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/research/${researchOrgId}/challenges`);
+        // Fixed URL to match your API route structure
+        const response = await fetch(`/api/research-organizations/${researchOrgId}/challenges`);
         if (!response.ok) {
           throw new Error('Failed to fetch research challenges');
         }
@@ -18,7 +19,7 @@ export function useResearchChallenges(researchOrgId: number) {
         setData(result.challenges || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-        setData([]); // Return empty array to fall back to demo data
+        setData([]); // Return empty array on error
       } finally {
         setLoading(false);
       }

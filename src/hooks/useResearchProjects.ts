@@ -10,7 +10,8 @@ export function useResearchProjects(researchOrgId: number) {
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/research/${researchOrgId}/projects`);
+        // Fixed URL to match your API route structure
+        const response = await fetch(`/api/research-organizations/${researchOrgId}/projects`);
         if (!response.ok) {
           throw new Error('Failed to fetch research projects');
         }
@@ -18,7 +19,7 @@ export function useResearchProjects(researchOrgId: number) {
         setData(result.projects || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-        setData([]); // Return empty array to fall back to demo data
+        setData([]); // Return empty array on error
       } finally {
         setLoading(false);
       }

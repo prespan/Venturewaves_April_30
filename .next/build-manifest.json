@@ -22,40 +22,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/challenges": [
+    "/dashboard/research": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/challenges.js"
-    ],
-    "/corporates": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/corporates.js"
-    ],
-    "/dashboard/corporate": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/dashboard/corporate.js"
-    ],
-    "/governments": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/governments.js"
-    ],
-    "/investors": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/investors.js"
+      "static/chunks/pages/dashboard/research.js"
     ],
     "/research-organizations": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/research-organizations.js"
-    ],
-    "/studios": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/studios.js"
     ]
   },
   "ampFirstPages": []
