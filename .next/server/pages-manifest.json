@@ -2,5 +2,22 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js"
+  "/dashboard/corporate": "pages/dashboard/corporate.js",
+  "/api/corporates/[id]/proposals": "pages/api/corporates/[id]/proposals.js",
+  "/api/corporates/[id]/projects": "pages/api/corporates/[id]/projects.js",
+  "/api/register/[role]": "pages/api/register/[role].js",
+  "/api/corporates/[id]/partners": "pages/api/corporates/[id]/partners.js",
+  "/api/corporates/[id]/challenges": "pages/api/corporates/[id]/challenges.js",
+  "/corporates": "pages/corporates.js",
+  "/api/corporates": "pages/api/corporates.js",
+  "/research-organizations": "pages/research-organizations.js",
+  "/api/research-organizations": "pages/api/research-organizations.js",
+  "/governments": "pages/governments.js",
+  "/api/governments": "pages/api/governments.js",
+  "/investors": "pages/investors.js",
+  "/api/investors": "pages/api/investors.js",
+  "/challenges": "pages/challenges.js",
+  "/api/challenges": "pages/api/challenges.js",
+  "/studios": "pages/studios.js",
+  "/api/studios": "pages/api/studios.js"
 }

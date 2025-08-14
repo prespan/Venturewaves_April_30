@@ -22,11 +22,9 @@
       "node"
     ],
     "moduleDetection": "force",
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
