@@ -19,15 +19,45 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
+    "/challenges": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/challenges.js"
+    ],
+    "/challenges/create": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/challenges/create.js"
+    ],
+    "/corporates": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/corporates.js"
+    ],
     "/dashboard/research": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/dashboard/research.js"
     ],
+    "/governments": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/governments.js"
+    ],
+    "/investors": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/investors.js"
+    ],
     "/research-organizations": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/research-organizations.js"
+    ],
+    "/studios": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/studios.js"
     ]
   },
   "ampFirstPages": []
