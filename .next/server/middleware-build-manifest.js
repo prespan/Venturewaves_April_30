@@ -34,30 +34,15 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/corporates.js"
     ],
-    "/dashboard/corporate": [
+    "/dashboard/investor": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/dashboard/corporate.js"
-    ],
-    "/dashboard/studio": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/dashboard/studio.js"
+      "static/chunks/pages/dashboard/investor.js"
     ],
     "/governments": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/governments.js"
-    ],
-    "/investors": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/investors.js"
-    ],
-    "/register/[role]": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/register/[role].js"
     ],
     "/research-organizations": [
       "static/chunks/webpack.js",
