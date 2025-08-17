@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST="{\"pages/studio/proposal/[id].tsx -> ../../../components/StudioManageProposal\":{\"id\":\"pages/studio/proposal/[id].tsx -> ../../../components/StudioManageProposal\",\"files\":[\"static/chunks/src_components_StudioManageProposal_tsx.js\"]}}"

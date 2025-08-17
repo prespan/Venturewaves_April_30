@@ -1,4 +1,4 @@
-// hooks/useStudioProposals.ts
+// hooks/useStudioProposals.ts (already created, keeping consistent)
 import { useState, useEffect } from 'react';
 
 export function useStudioProposals(studioId: number) {
@@ -9,16 +9,22 @@ export function useStudioProposals(studioId: number) {
   useEffect(() => {
     const fetchProposals = async () => {
       try {
+        console.log('🔍 Fetching proposals for studio ID:', studioId);
         setLoading(true);
-        const response = await fetch(`/api/studio/${studioId}/proposals`);
+        
+        const url = `/api/studios/${studioId}/proposals`;
+        const response = await fetch(url);
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch studio proposals');
+          throw new Error(`Failed to fetch proposals: ${response.status}`);
         }
+        
         const result = await response.json();
         setData(result.proposals || []);
       } catch (err) {
+        console.error('❌ Error fetching proposals:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
-        setData([]); // Return empty array to fall back to demo data
+        setData([]);
       } finally {
         setLoading(false);
       }
@@ -26,6 +32,8 @@ export function useStudioProposals(studioId: number) {
 
     if (studioId) {
       fetchProposals();
+    } else {
+      setLoading(false);
     }
   }, [studioId]);
 

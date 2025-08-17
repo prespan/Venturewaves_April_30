@@ -1,4 +1,4 @@
-// hooks/useStudioChallenges.ts
+// hooks/useStudioChallenges.ts (matches your pattern)
 import { useState, useEffect } from 'react';
 
 export function useStudioChallenges(studioId: number) {
@@ -9,16 +9,22 @@ export function useStudioChallenges(studioId: number) {
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
+        console.log('🔍 Fetching challenges for studio ID:', studioId);
         setLoading(true);
-        const response = await fetch(`/api/studio/${studioId}/challenges`);
+        
+        const url = `/api/studios/${studioId}/challenges`;
+        const response = await fetch(url);
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch studio challenges');
+          throw new Error(`Failed to fetch challenges: ${response.status}`);
         }
+        
         const result = await response.json();
         setData(result.challenges || []);
       } catch (err) {
+        console.error('❌ Error fetching challenges:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
-        setData([]); // Return empty array to fall back to demo data
+        setData([]);
       } finally {
         setLoading(false);
       }
@@ -26,6 +32,8 @@ export function useStudioChallenges(studioId: number) {
 
     if (studioId) {
       fetchChallenges();
+    } else {
+      setLoading(false);
     }
   }, [studioId]);
 

@@ -24,20 +24,15 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/challenges.js"
     ],
-    "/challenges/create": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/challenges/create.js"
-    ],
     "/corporates": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/corporates.js"
     ],
-    "/dashboard/research": [
+    "/dashboard/studio": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/dashboard/research.js"
+      "static/chunks/pages/dashboard/studio.js"
     ],
     "/governments": [
       "static/chunks/webpack.js",
@@ -53,6 +48,16 @@ self.__BUILD_MANIFEST = {
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/research-organizations.js"
+    ],
+    "/studio/challenge/[id]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/studio/challenge/[id].js"
+    ],
+    "/studio/proposal/[id]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/studio/proposal/[id].js"
     ],
     "/studios": [
       "static/chunks/webpack.js",

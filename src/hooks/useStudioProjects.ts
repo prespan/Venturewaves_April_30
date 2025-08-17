@@ -1,4 +1,4 @@
-// hooks/useStudioProjects.ts
+// hooks/useStudioProjects.ts (already created, keeping consistent)
 import { useState, useEffect } from 'react';
 
 export function useStudioProjects(studioId: number) {
@@ -9,16 +9,22 @@ export function useStudioProjects(studioId: number) {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        console.log('🔍 Fetching projects for studio ID:', studioId);
         setLoading(true);
-        const response = await fetch(`/api/studio/${studioId}/projects`);
+        
+        const url = `/api/studios/${studioId}/projects`;
+        const response = await fetch(url);
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch studio projects');
+          throw new Error(`Failed to fetch projects: ${response.status}`);
         }
+        
         const result = await response.json();
         setData(result.projects || []);
       } catch (err) {
+        console.error('❌ Error fetching projects:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
-        setData([]); // Return empty array to fall back to demo data
+        setData([]);
       } finally {
         setLoading(false);
       }
@@ -26,6 +32,8 @@ export function useStudioProjects(studioId: number) {
 
     if (studioId) {
       fetchProjects();
+    } else {
+      setLoading(false);
     }
   }, [studioId]);
 

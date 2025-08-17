@@ -1,4 +1,4 @@
-// hooks/useStudioPartners.ts
+// hooks/useStudioPartners.ts (matches your pattern)
 import { useState, useEffect } from 'react';
 
 export function useStudioPartners(studioId: number) {
@@ -9,16 +9,22 @@ export function useStudioPartners(studioId: number) {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
+        console.log('🔍 Fetching partners for studio ID:', studioId);
         setLoading(true);
-        const response = await fetch(`/api/studio/${studioId}/partners`);
+        
+        const url = `/api/studios/${studioId}/partners`;
+        const response = await fetch(url);
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch studio partners');
+          throw new Error(`Failed to fetch partners: ${response.status}`);
         }
+        
         const result = await response.json();
         setData(result.partners || []);
       } catch (err) {
+        console.error('❌ Error fetching partners:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
-        setData([]); // Return empty array to fall back to demo data
+        setData([]);
       } finally {
         setLoading(false);
       }
@@ -26,6 +32,8 @@ export function useStudioPartners(studioId: number) {
 
     if (studioId) {
       fetchPartners();
+    } else {
+      setLoading(false);
     }
   }, [studioId]);
 
