@@ -13,6 +13,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   // Check if current route is a dashboard that needs fullscreen layout
   const isFullscreenRoute = router.pathname.startsWith('/dashboard')
+  
+  // Define public routes where sidebar should never show
+  const publicRoutes = ['/', '/login', '/register', '/about', '/contact']
+  const isPublicRoute = publicRoutes.includes(router.pathname)
 
   useEffect(() => {
     const checkAuth = () => {
@@ -20,79 +24,96 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         const storedUser = localStorage.getItem('user')
         const authToken = localStorage.getItem('authToken')
         
-        if (storedUser && authToken && !router.pathname.startsWith('/dashboard')) {
-          setUser(JSON.parse(storedUser))
+        // Only authenticate if NOT on a public route
+        if (storedUser && authToken && !isPublicRoute) {
+          const userData = JSON.parse(storedUser)
+          setUser(userData)
           setIsAuthenticated(true)
           setIsLoading(false)
-        } else {
+        } else if (router.pathname.startsWith('/dashboard')) {
           // TEMPORARY: Auto-login for dashboard routes
-          if (router.pathname.startsWith('/dashboard')) {
-            // Extract organization info from URL or use defaults
-            let tempUser = {
-              id: 76,
+          
+          // Extract ID from URL to determine specific organization
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlId = urlParams.get('id');
+          
+          // Initialize default user
+          let tempUser = {
+            id: 1,
+            name: 'Default User',
+            organizationType: 'Corporate'
+          }
+          
+          // Detect organization type and set appropriate user data
+          if (router.pathname.includes('/corporate')) {
+            tempUser = {
+              id: parseInt(urlId || '76'),
               name: 'Siemens',
               organizationType: 'Corporate'
             }
+          } else if (router.pathname.includes('/government')) {
+            tempUser = {
+              id: parseInt(urlId || '41'),
+              name: 'Innovate UK',
+              organizationType: 'Government'
+            }
+          } else if (router.pathname.includes('/studio')) {
+            tempUser = {
+              id: parseInt(urlId || '2'),
+              name: 'Antler',
+              organizationType: 'Studio'
+            }
+          } else if (router.pathname.includes('/research')) {
+            // FIXED: Proper research organization detection
+            const researchId = parseInt(urlId || '6');
+            let researchName = 'MIT Research Lab';
             
-            // Extract ID from URL to determine specific organization
-            const urlParams = new URLSearchParams(window.location.search);
-            const urlId = urlParams.get('id');
-            
-            // Detect organization type and set appropriate user data
-            if (router.pathname.includes('/corporate')) {
-              tempUser = {
-                id: parseInt(urlId || '76'),
-                name: 'Siemens',
-                organizationType: 'Corporate'
-              }
-            } else if (router.pathname.includes('/government')) {
-              tempUser = {
-                id: parseInt(urlId || '41'),
-                name: 'Innovate UK',
-                organizationType: 'Government'
-              }
-            } else if (router.pathname.includes('/studio')) {
-              tempUser = {
-                id: parseInt(urlId || '20'),
-                name: 'Antler',
-                organizationType: 'Studio'
-              }
-            } else if (router.pathname.includes('/research')) {
-              // Simple mapping for research organizations
-              const researchId = parseInt(urlId || '30');
-              
-              tempUser = {
-                id: researchId,
-                name: 'Fraunhofer Institute',
-                organizationType: 'Research Org'
-              }
-            } else if (router.pathname.includes('/investor')) {
-              // Dynamic name based on ID
-              const investorId = parseInt(urlId || '40');
-              let investorName = 'Sequoia Capital';
-              
-              if (investorId === 16 || investorId === 20) {
-                investorName = 'Temasek';
-              } else if (investorId === 40) {
-                investorName = 'Sequoia Capital';
-              }
-              
-              tempUser = {
-                id: investorId,
-                name: investorName,
-                organizationType: 'Investor'
-              }
+            // Map specific research organization IDs to names
+            if (researchId === 6) {
+              researchName = 'MIT Research Lab';
+            } else if (researchId === 30) {
+              researchName = 'Fraunhofer Institute';
+            } else if (researchId === 7) {
+              researchName = 'Stanford Research Institute';
+            } else {
+              researchName = 'Research Organization';
             }
             
-            console.log('Setting user:', tempUser);
-            setUser(tempUser)
-            setIsAuthenticated(true)
-            localStorage.setItem('user', JSON.stringify(tempUser))
-            localStorage.setItem('authToken', 'authenticated')
-            setIsLoading(false)
-          } else {
-            setIsLoading(false)
+            tempUser = {
+              id: researchId,
+              name: researchName,
+              organizationType: 'Research Org'
+            }
+          } else if (router.pathname.includes('/investor')) {
+            const investorId = parseInt(urlId || '40');
+            let investorName = 'Sequoia Capital';
+            
+            if (investorId === 16 || investorId === 20) {
+              investorName = 'Temasek';
+            } else if (investorId === 40) {
+              investorName = 'Sequoia Capital';
+            }
+            
+            tempUser = {
+              id: investorId,
+              name: investorName,
+              organizationType: 'Investor'
+            }
           }
+          
+          console.log('Setting user for dashboard:', tempUser, 'Route:', router.pathname, 'ID:', urlId);
+          setUser(tempUser)
+          setIsAuthenticated(true)
+          localStorage.setItem('user', JSON.stringify(tempUser))
+          localStorage.setItem('authToken', 'authenticated')
+          setIsLoading(false)
+        } else {
+          // On public routes, clear authentication
+          if (isPublicRoute) {
+            setUser(null)
+            setIsAuthenticated(false)
+          }
+          setIsLoading(false)
         }
       } catch (error) {
         console.error('Error checking authentication:', error)
@@ -103,7 +124,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }
 
     checkAuth()
-  }, [router.pathname, router.asPath])
+  }, [router.pathname, router.asPath, isPublicRoute])
 
   const handleLogin = (userData: any) => {
     setUser(userData)
@@ -145,7 +166,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <Layout 
-        isAuthenticated={isAuthenticated}
+        isAuthenticated={isAuthenticated && !isPublicRoute}
         user={user}
         onLogout={handleLogout}
         fullscreen={isFullscreenRoute}

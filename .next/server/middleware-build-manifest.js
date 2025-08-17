@@ -9,6 +9,11 @@ self.__BUILD_MANIFEST = {
   "lowPriorityFiles": [],
   "rootMainFiles": [],
   "pages": {
+    "/": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/index.js"
+    ],
     "/_app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -29,6 +34,11 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/corporates.js"
     ],
+    "/dashboard/corporate": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/dashboard/corporate.js"
+    ],
     "/dashboard/studio": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -44,20 +54,15 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/investors.js"
     ],
+    "/register/[role]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/register/[role].js"
+    ],
     "/research-organizations": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/research-organizations.js"
-    ],
-    "/studio/challenge/[id]": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/studio/challenge/[id].js"
-    ],
-    "/studio/proposal/[id]": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/studio/proposal/[id].js"
     ],
     "/studios": [
       "static/chunks/webpack.js",
