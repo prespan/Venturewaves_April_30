@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from 'next/router';
-import {
+import * as LucideIcons from "lucide-react";
+
+import { useInvestorChallenges } from "@/hooks/useInvestorChallenges";
+import { useInvestorInvestments } from "@/hooks/useInvestorInvestments";
+import { useInvestorPortfolio } from "@/hooks/useInvestorPortfolio";
+import { useInvestorOpportunities } from "@/hooks/useInvestorOpportunities";
+
+// Destructure icons from the imported module
+const {
   TrendingUp,
   FileText,
   Users,
@@ -17,12 +25,7 @@ import {
   BarChart3,
   Briefcase,
   Plus,
-} from "lucide-react";
-
-import { useInvestorChallenges } from "@/hooks/useInvestorChallenges";
-import { useInvestorInvestments } from "@/hooks/useInvestorInvestments";
-import { useInvestorPortfolio } from "@/hooks/useInvestorPortfolio";
-import { useInvestorOpportunities } from "@/hooks/useInvestorOpportunities";
+} = LucideIcons;
 
 interface InvestorDashboardProps {
   organizationName?: string;

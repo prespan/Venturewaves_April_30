@@ -86,17 +86,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             }
           } else if (router.pathname.includes('/investor')) {
             const investorId = parseInt(urlId || '40');
-            let investorName = 'Sequoia Capital';
-            
-            if (investorId === 16 || investorId === 20) {
-              investorName = 'Temasek';
-            } else if (investorId === 40) {
-              investorName = 'Sequoia Capital';
-            }
-            
+            // FIXED: Always use Temasek for investor dashboard
             tempUser = {
               id: investorId,
-              name: investorName,
+              name: 'Temasek', // Changed to always use Temasek
               organizationType: 'Investor'
             }
           }

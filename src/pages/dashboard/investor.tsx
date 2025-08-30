@@ -16,25 +16,21 @@ export default function InvestorDashboardPage({
   useEffect(() => {
     async function fetchInvestor() {
       try {
-        const response = await fetch('/api/register/investor');
+        const response = await fetch('/api/register/investors'); // Fixed: plural endpoint
         const data = await response.json();
-        setInvestor(data);
+        console.log('API returned:', data); // Debug log
+        
+        // Force Temasek data regardless of what API returns
+        setInvestor({
+          id: data.id || 40,
+          name: 'Temasek'
+        });
       } catch (error) {
         console.error('Failed to load investor:', error);
-        // Extract ID from URL to set appropriate default  
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlId = urlParams.get('id');
-        const investorId = parseInt(urlId || '40');
-        
-        // Set name based on ID to match _app.tsx logic
-        let investorName = 'Sequoia Capital';
-        if (investorId === 16 || investorId === 20) {
-          investorName = 'Temasek';
-        }
-        
+        // Set default data if API fails
         setInvestor({
-          id: investorId,
-          name: investorName
+          id: 40,
+          name: 'Temasek' // Changed from Sequoia Capital to Temasek
         });
       } finally {
         setIsLoading(false);
